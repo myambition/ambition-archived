@@ -6,40 +6,31 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
 	"io/ioutil"
+	"reflect"
 )
 
-func createTables() {
-	db, err := gorm.Open("postgres", "user=postgres dbname=ambition password=ambition")
-	check(err)
-	db.DB()
+type Database struct {
+	d gorm.DB
+}
 
-	db.CreateTable(&Event{})
-	db.CreateTable(&EventTime{})
+func (db Database) createTables() {
+	fmt.Print(reflect.TypeOf(db))
+	db.d.CreateTable(&Event{})
+	db.d.CreateTable(&EventTime{})
 
 }
 
-func clearTables() {
-	db, err := gorm.Open("postgres", "user=postgres dbname=ambition password=ambition")
-	check(err)
-	db.DB()
-
-	db.Find(&Event{}).Delete(&Event{})
-	db.Find(&EventTime{}).Delete(&EventTime{})
+func (db Database) clearTables() {
+	db.d.Find(&Event{}).Delete(&Event{})
+	db.d.Find(&EventTime{}).Delete(&EventTime{})
 }
 
-func dropTables() {
-	db, err := gorm.Open("postgres", "user=postgres dbname=ambition password=ambition")
-	check(err)
-	db.DB()
-
-	db.DropTable(&Event{})
-	db.DropTable(&EventTime{})
+func (db Database) dropTables() {
+	db.d.DropTable(&Event{})
+	db.d.DropTable(&EventTime{})
 }
 
-func seedTables() {
-	db, err := gorm.Open("postgres", "user=postgres dbname=ambition password=ambition")
-	db.DB()
-
+func (db Database) seedTables() {
 	seedJSON, err := ioutil.ReadFile("./config/seed.json")
 	check(err)
 	fmt.Print(string(seedJSON))
@@ -51,6 +42,6 @@ func seedTables() {
 	fmt.Print(seed)
 
 	for _, event := range seed {
-		db.Create(&event)
+		db.d.Create(&event)
 	}
 }
