@@ -5,12 +5,11 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func clearDatabase() {
+func clearTables() {
 	db, err := gorm.Open("postgres", "user=postgres dbname=ambition password=ambition")
 	check(err)
 	db.DB()
 
-	db.DropTable(&Event{})
-	db.DropTable(&EventTime{})
-
+	db.Find(&Event{}).Delete(&Event{})
+	db.Find(&EventTime{}).Delete(&EventTime{})
 }

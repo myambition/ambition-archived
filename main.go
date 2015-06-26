@@ -1,18 +1,25 @@
 package main
 
 import (
-	"net/http"
+	//	"net/http"
+	"fmt"
 	"os"
 )
 
 var _commands = map[string]func(){
-	"seed":   seedDatabase,
-	"clear":  clearDatabase,
-	"create": createDatabase,
+	"seed":   seedTables,
+	"clear":  clearTables,
+	"create": createTables,
+	"drop":   dropTables,
 }
 
 func main() {
-	_commands[os.Args[1]]()
-	http.HandleFunc("/", handler)
-	http.ListenAndServe(":8081", nil)
+	command := _commands[os.Args[1]]
+	if command != nil {
+		command()
+	} else {
+		fmt.Println("Command not found")
+	}
+	//	http.HandleFunc("/", handler)
+	//	http.ListenAndServe(":8081", nil)
 }

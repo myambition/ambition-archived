@@ -8,7 +8,7 @@ import (
 	"io/ioutil"
 )
 
-func seedDatabase() {
+func seedTables() {
 	db, err := gorm.Open("postgres", "user=postgres dbname=ambition password=ambition")
 	db.DB()
 
@@ -21,4 +21,8 @@ func seedDatabase() {
 	json.Unmarshal(seedJSON, &seed)
 
 	fmt.Print(seed)
+
+	for _, event := range seed {
+		db.Create(&event)
+	}
 }

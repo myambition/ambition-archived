@@ -5,7 +5,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func createDatabase() {
+func createTables() {
 	db, err := gorm.Open("postgres", "user=postgres dbname=ambition password=ambition")
 	check(err)
 	db.DB()
