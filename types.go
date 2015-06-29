@@ -4,14 +4,14 @@ import (
 	"time"
 )
 
-type Event struct {
-	ID         int
-	EventName  string
-	EventTimes []EventTime
+type Action struct {
+	ID          int
+	ActionName  string
+	Occurrences []Occurrence
 }
 
-type EventTime struct {
-	ID      int
-	EventID int
-	Time    time.Time
+type Occurrence struct {
+	ID       int
+	ActionID int
+	Time     time.Time
 }

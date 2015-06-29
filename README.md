@@ -1,5 +1,5 @@
 # ambition
-Event tracking
+Action tracking
 
 Assumes:
  * Postgres is install under user postgres

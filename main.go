@@ -19,6 +19,7 @@ var _commands = map[string]func(){
 
 func main() {
 	database.d.DB()
+	//need to add check that os.Args is greater than 1
 	command := _commands[os.Args[1]]
 	if command != nil {
 		command()

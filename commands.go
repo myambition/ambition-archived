@@ -15,19 +15,19 @@ type Database struct {
 
 func (db Database) createTables() {
 	fmt.Print(reflect.TypeOf(db))
-	db.d.CreateTable(&Event{})
-	db.d.CreateTable(&EventTime{})
+	db.d.CreateTable(&Action{})
+	db.d.CreateTable(&Occurrence{})
 
 }
 
 func (db Database) clearTables() {
-	db.d.Find(&Event{}).Delete(&Event{})
-	db.d.Find(&EventTime{}).Delete(&EventTime{})
+	db.d.Find(&Action{}).Delete(&Action{})
+	db.d.Find(&Occurrence{}).Delete(&Occurrence{})
 }
 
 func (db Database) dropTables() {
-	db.d.DropTable(&Event{})
-	db.d.DropTable(&EventTime{})
+	db.d.DropTable(&Action{})
+	db.d.DropTable(&Occurrence{})
 }
 
 func (db Database) seedTables() {
@@ -35,13 +35,13 @@ func (db Database) seedTables() {
 	check(err)
 	fmt.Print(string(seedJSON))
 
-	var seed []Event
+	var seed []Action
 
 	json.Unmarshal(seedJSON, &seed)
 
 	fmt.Print(seed)
 
-	for _, event := range seed {
-		db.d.Create(&event)
+	for _, action := range seed {
+		db.d.Create(&action)
 	}
 }
