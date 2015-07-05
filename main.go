@@ -22,16 +22,19 @@ var _commands = map[string]func(){
 func main() {
 	database.d.DB()
 	//need to add check that os.Args is greater than 1
-	if len(os.Args) > 2 {
+	if len(os.Args) > 1 {
 		command := _commands[os.Args[1]]
 		if command != nil {
 			command()
 		} else {
 			fmt.Println("Command not found")
 		}
-	}
-	router := httprouter.New()
-	router.GET("/", handler)
+	} else {
+		router := httprouter.New()
+		router.GET("/", handler)
+		router.GET("/actions", actions)
+		router.GET("/actions/:id", action_id)
 
-	http.ListenAndServe(":3000", router)
+		http.ListenAndServe(":3000", router)
+	}
 }
