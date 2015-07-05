@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-var mygorm, _ = gorm.Open("postgres", "user=postgres dbname=ambition password=ambition")
+var mygorm, _ = gorm.Open("postgres", "user=ambition dbname=ambition password=ambition")
 
 var database = Database{mygorm}
 
