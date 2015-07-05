@@ -34,6 +34,7 @@ func main() {
 		router.GET("/", handler)
 		router.GET("/actions", actions)
 		router.GET("/actions/:id", action_id)
+		router.GET("/actions/:id/occurrences", occurrences)
 		router.POST("/actions/:id", post_occurrence)
 
 		http.ListenAndServe(":3000", router)

@@ -28,7 +28,7 @@ func actions(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 func action_id(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	action_by_id := Action{}
 
-	database.d.Find(&action_by_id).Where("id = ?", ps.ByName("id"))
+	database.d.Where("id = ?", ps.ByName("id")).Find(&action_by_id)
 
 	action_json, err := json.Marshal(action_by_id)
 	check(err)
@@ -36,6 +36,16 @@ func action_id(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Fprintf(w, "%s", string(action_json))
 }
 
+func occurrences(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	occurrences := []Occurrence{}
+
+	database.d.Where("Action_ID = ?", ps.ByName("id")).Find(&occurrences)
+
+	occurrences_json, err := json.Marshal(occurrences)
+	check(err)
+
+	fmt.Fprintf(w, "%s", string(occurrences_json))
+}
 func post_occurrence(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	occurrenceJSON, err := ioutil.ReadAll(r.Body)
 	check(err)
