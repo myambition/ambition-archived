@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
+	"io/ioutil"
 	"net/http"
+	"strconv"
 )
 
 func handler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -32,4 +34,19 @@ func action_id(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	check(err)
 
 	fmt.Fprintf(w, "%s", string(action_json))
+}
+
+func post_occurrence(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	occurrenceJSON, err := ioutil.ReadAll(r.Body)
+	check(err)
+
+	var occurence Occurrence
+
+	json.Unmarshal(occurrenceJSON, &occurence)
+	i, err := strconv.Atoi(ps.ByName("id"))
+	check(err)
+
+	occurence.ActionID = i
+
+	database.d.Create(&occurence)
 }
