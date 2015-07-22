@@ -15,17 +15,16 @@ type Database struct {
 
 func (db Database) createTables() {
 	fmt.Print(reflect.TypeOf(db))
+	db.d.CreateTable(&User{})
+	db.d.CreateTable(&Set{})
 	db.d.CreateTable(&Action{})
 	db.d.CreateTable(&Occurrence{})
 
 }
 
-func (db Database) clearTables() {
-	db.d.Find(&Action{}).Delete(&Action{})
-	db.d.Find(&Occurrence{}).Delete(&Occurrence{})
-}
-
 func (db Database) dropTables() {
+	db.d.DropTable(&User{})
+	db.d.DropTable(&Set{})
 	db.d.DropTable(&Action{})
 	db.d.DropTable(&Occurrence{})
 }
@@ -44,4 +43,12 @@ func (db Database) seedTables() {
 	for _, action := range seed {
 		db.d.Create(&action)
 	}
+
+	db.d.Create(&Set{SetName: "Health", Actions: seed})
+}
+
+func (db Database) refreshTables() {
+	database.dropTables()
+	database.createTables()
+	database.seedTables()
 }

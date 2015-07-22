@@ -13,15 +13,16 @@ var mygorm, _ = gorm.Open("postgres", "user=ambition dbname=ambition password=am
 var database = Database{mygorm}
 
 var _commands = map[string]func(){
-	"seed":   database.seedTables,
-	"clear":  database.clearTables,
-	"create": database.createTables,
-	"drop":   database.dropTables,
+	"seed":    database.seedTables,
+	"create":  database.createTables,
+	"drop":    database.dropTables,
+	"refresh": database.refreshTables,
 }
 
 func main() {
+	database.d.LogMode(true)
 	database.d.DB()
-	//need to add check that os.Args is greater than 1
+
 	if len(os.Args) > 1 {
 		command := _commands[os.Args[1]]
 		if command != nil {
@@ -33,9 +34,12 @@ func main() {
 		router := httprouter.New()
 		router.GET("/", handler)
 		router.GET("/actions", actions)
-		router.GET("/actions/:id", action_id)
+		router.GET("/actions/:id", actionById)
 		router.GET("/actions/:id/occurrences", occurrences)
-		router.POST("/actions/:id", post_occurrence)
+		router.POST("/actions/:id", postOccurrence)
+
+		router.GET("/sets", sets)
+		router.GET("/sets/:id/actions", actionsFromSet)
 
 		http.ListenAndServe(":3000", router)
 	}
