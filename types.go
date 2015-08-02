@@ -5,27 +5,27 @@ import (
 )
 
 type User struct {
-	ID       int
+	Id       int
 	UserName string
 	Email    string
 	Sets     []Set
 }
 
 type Set struct {
-	ID      int
+	Id      int
 	SetName string
 	Actions []Action
 }
 
 type Action struct {
-	ID          int
+	Id          int
 	ActionName  string
 	Occurrences []Occurrence
 	Sets        []Set
 }
 
 type Occurrence struct {
-	ID       int
-	ActionID int
+	Id       int
+	ActionId int
 	Time     time.Time
 }

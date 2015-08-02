@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/julienschmidt/httprouter"
@@ -22,6 +23,12 @@ var _commands = map[string]func(){
 func main() {
 	database.d.LogMode(true)
 	database.d.DB()
+
+	tempdb, err := sql.Open("postgres", "dbname=ambition user=ambition password=ambition sslmode=disable")
+	check(err)
+	db := DB{tempdb}
+
+	fmt.Printf("%v\n", action)
 
 	if len(os.Args) > 1 {
 		command := _commands[os.Args[1]]

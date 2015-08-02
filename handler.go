@@ -76,7 +76,7 @@ func postOccurrence(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 	i, err := strconv.Atoi(ps.ByName("id"))
 	check(err)
 
-	occurence.ActionID = i
+	occurence.ActionId = i
 
 	database.d.Create(&occurence)
 }
