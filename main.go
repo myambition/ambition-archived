@@ -3,8 +3,8 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	//"github.com/julienschmidt/httprouter"
-	//	"net/http"
+	"github.com/julienschmidt/httprouter"
+	"net/http"
 	"os"
 )
 
@@ -21,11 +21,7 @@ var _commands = map[string]func(){
 
 func main() {
 
-	defer tempdb.Close()
-	db := DB{tempdb}
-	db.DropActionTable()
-	err := db.CreateActionTable()
-	check(err)
+	//defer tempdb.Close()
 
 	if len(os.Args) > 1 {
 		command := _commands[os.Args[1]]
@@ -35,17 +31,17 @@ func main() {
 			fmt.Println("Command not found")
 		}
 	} else {
-		//router := httprouter.New()
-		/*	router.GET("/", handler)
-			router.GET("/actions", actions)
-			router.GET("/actions/:id", actionById)
-			router.GET("/actions/:id/occurrences", occurrences)
-			router.POST("/actions/:id", postOccurrence)
+		router := httprouter.New()
+		//router.GET("/", handler)
+		//router.GET("/actions", actions)
+		router.GET("/actions/:id", actionById)
+		//router.GET("/actions/:id/occurrences", occurrences)
+		//router.POST("/actions/:id", postOccurrence)
 
-			router.GET("/sets", sets)
-			router.GET("/sets/:id/actions", actionsFromSet)
+		//router.GET("/sets", sets)
+		//router.GET("/sets/:id/actions", actionsFromSet)
 
-			http.ListenAndServe(":3000", router)
-		*/
+		http.ListenAndServe(":3000", router)
+
 	}
 }

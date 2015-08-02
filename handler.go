@@ -1,16 +1,16 @@
 package main
 
-/*
 import (
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
-	"io/ioutil"
+	//	"io/ioutil"
 	"net/http"
 	"strconv"
-	"time"
+	//	"time"
 )
 
+/*
 func handler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Fprint(w, "ambition!")
 }
@@ -26,11 +26,13 @@ func actions(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	fmt.Fprintf(w, "%s", string(actions_json))
 }
-
+*/
 func actionById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	action_by_id := Action{}
+	id, err := strconv.Atoi(ps.ByName("id"))
+	check(err)
 
-	database.d.Where("id = ?", ps.ByName("id")).Find(&action_by_id)
+	action_by_id, err := database.GetActionById(id)
+	check(err)
 
 	action_json, err := json.Marshal(action_by_id)
 	check(err)
@@ -38,6 +40,7 @@ func actionById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Fprintf(w, "%s", string(action_json))
 }
 
+/*
 func occurrences(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	occurrences := []Occurrence{}
 
