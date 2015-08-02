@@ -14,14 +14,11 @@ type User struct {
 type Set struct {
 	Id      int
 	SetName string
-	Actions []Action
 }
 
 type Action struct {
-	Id          int
-	ActionName  string
-	Occurrences []Occurrence
-	Sets        []Set
+	Id         int
+	ActionName string
 }
 
 type Occurrence struct {
