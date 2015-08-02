@@ -14,11 +14,11 @@ import (
 func handler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Fprint(w, "ambition!")
 }
-
+*/
 func actions(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	all_actions := []Action{}
+	all_actions, err := database.GetActions()
+	check(err)
 
-	database.d.Find(&all_actions)
 	fmt.Println(all_actions)
 
 	actions_json, err := json.Marshal(all_actions)
@@ -26,7 +26,7 @@ func actions(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	fmt.Fprintf(w, "%s", string(actions_json))
 }
-*/
+
 func actionById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id, err := strconv.Atoi(ps.ByName("id"))
 	check(err)

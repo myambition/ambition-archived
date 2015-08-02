@@ -9,6 +9,10 @@ type DB struct {
 	*sql.DB
 }
 
+var tempdb, _ = sql.Open("postgres", "dbname=ambition user=ambition password=ambition sslmode=disable")
+
+var database = DB{tempdb}
+
 func getTable(obj interface{}) string {
 	switch obj.(type) {
 	default:
@@ -24,6 +28,7 @@ func (db DB) GetActionById(id int) (*Action, error) {
 	const query = `SELECT action_name from actions where id = $1`
 	var reval Action
 	err := db.QueryRow(query, id).Scan(&reval.ActionName)
+	check(err)
 	reval.Id = id
 	return &reval, err
 }
@@ -46,7 +51,7 @@ func (db DB) GetActions() ([]Action, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var action Action
-		err := rows.Scan(&action.ActionName)
+		err := rows.Scan(&action.Id, &action.ActionName)
 		check(err)
 		reval = append(reval, action)
 	}
