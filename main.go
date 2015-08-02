@@ -3,32 +3,29 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"github.com/jinzhu/gorm"
-	"github.com/julienschmidt/httprouter"
-	"net/http"
+	//"github.com/julienschmidt/httprouter"
+	//	"net/http"
 	"os"
 )
 
-var mygorm, _ = gorm.Open("postgres", "user=ambition dbname=ambition password=ambition")
+var tempdb, _ = sql.Open("postgres", "dbname=ambition user=ambition password=ambition sslmode=disable")
 
-var database = Database{mygorm}
+var database = DB{tempdb}
 
 var _commands = map[string]func(){
-	"seed":    database.seedTables,
-	"create":  database.createTables,
-	"drop":    database.dropTables,
-	"refresh": database.refreshTables,
+	"seed": database.seedTables,
+	//"create":  database.createTables,
+	//"drop":    database.dropTables,
+	//"refresh": database.refreshTables,
 }
 
 func main() {
-	database.d.LogMode(true)
-	database.d.DB()
 
-	tempdb, err := sql.Open("postgres", "dbname=ambition user=ambition password=ambition sslmode=disable")
-	check(err)
+	defer tempdb.Close()
 	db := DB{tempdb}
-
-	fmt.Printf("%v\n", action)
+	db.DropActionTable()
+	err := db.CreateActionTable()
+	check(err)
 
 	if len(os.Args) > 1 {
 		command := _commands[os.Args[1]]
@@ -38,16 +35,17 @@ func main() {
 			fmt.Println("Command not found")
 		}
 	} else {
-		router := httprouter.New()
-		router.GET("/", handler)
-		router.GET("/actions", actions)
-		router.GET("/actions/:id", actionById)
-		router.GET("/actions/:id/occurrences", occurrences)
-		router.POST("/actions/:id", postOccurrence)
+		//router := httprouter.New()
+		/*	router.GET("/", handler)
+			router.GET("/actions", actions)
+			router.GET("/actions/:id", actionById)
+			router.GET("/actions/:id/occurrences", occurrences)
+			router.POST("/actions/:id", postOccurrence)
 
-		router.GET("/sets", sets)
-		router.GET("/sets/:id/actions", actionsFromSet)
+			router.GET("/sets", sets)
+			router.GET("/sets/:id/actions", actionsFromSet)
 
-		http.ListenAndServe(":3000", router)
+			http.ListenAndServe(":3000", router)
+		*/
 	}
 }

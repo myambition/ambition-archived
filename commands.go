@@ -3,33 +3,27 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jinzhu/gorm"
-	_ "github.com/lib/pq"
 	"io/ioutil"
-	"reflect"
+	//	"reflect"
 )
 
-type Database struct {
-	d gorm.DB
-}
-
-func (db Database) createTables() {
+/*
+func (db DB) createTables() {
 	fmt.Print(reflect.TypeOf(db))
-	db.d.CreateTable(&User{})
-	db.d.CreateTable(&Set{})
-	db.d.CreateTable(&Action{})
-	db.d.CreateTable(&Occurrence{})
+	db.CreateTable(&Set{})
+	db.CreateTable(&Action{})
+	db.CreateTable(&Occurrence{})
 
 }
 
-func (db Database) dropTables() {
-	db.d.DropTable(&User{})
-	db.d.DropTable(&Set{})
-	db.d.DropTable(&Action{})
-	db.d.DropTable(&Occurrence{})
+func (db DB) dropTables() {
+	db.DropTable(&User{})
+	db.DropTable(&Set{})
+	db.DropTable(&Action{})
+	db.DropTable(&Occurrence{})
 }
-
-func (db Database) seedTables() {
+*/
+func (db DB) seedTables() {
 	seedJSON, err := ioutil.ReadFile("./config/seed.json")
 	check(err)
 	fmt.Print(string(seedJSON))
@@ -41,14 +35,15 @@ func (db Database) seedTables() {
 	fmt.Print(seed)
 
 	for _, action := range seed {
-		db.d.Create(&action)
+		db.InsertAction(&action)
 	}
 
-	db.d.Create(&Set{SetName: "Health", Actions: seed})
 }
 
-func (db Database) refreshTables() {
+/*
+func (db DB) refreshTables() {
 	database.dropTables()
 	database.createTables()
 	database.seedTables()
 }
+*/

@@ -1,5 +1,6 @@
 package main
 
+/*
 import (
 	"encoding/json"
 	"fmt"
@@ -102,3 +103,4 @@ func actionsFromSet(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 
 	fmt.Fprintf(w, "%s", actions_json)
 }
+*/
