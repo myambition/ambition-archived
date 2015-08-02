@@ -41,6 +41,7 @@ func actionById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 }
 
 /*
+
 func occurrences(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	occurrences := []Occurrence{}
 
@@ -69,6 +70,7 @@ func occurrences(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	fmt.Fprintf(w, "%s", string(occurrences_json))
 }
+
 
 func postOccurrence(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	occurrenceJSON, err := ioutil.ReadAll(r.Body)

@@ -24,6 +24,22 @@ func getTable(obj interface{}) string {
 	}
 }
 
+func (db DB) GetActions() ([]Action, error) {
+	const query = `SELECT * from actions`
+	var reval []Action
+
+	rows, err := db.Query(query)
+	check(err)
+	defer rows.Close()
+	for rows.Next() {
+		var action Action
+		err := rows.Scan(&action.Id, &action.ActionName)
+		check(err)
+		reval = append(reval, action)
+	}
+	return reval, err
+}
+
 func (db DB) GetActionById(id int) (*Action, error) {
 	const query = `SELECT action_name from actions where id = $1`
 	var reval Action
@@ -42,33 +58,45 @@ func (db DB) InsertAction(action *Action) error {
 	return err
 }
 
-func (db DB) GetActions() ([]Action, error) {
-	const query = `SELECT * from actions`
-	var reval []Action
+// -------------- Occurrences ------------------ //
+
+func (db DB) GetOccurrenceById(id int) (*Occurrence, error) {
+	const query = `SELECT action_name,time from occurrences where id = $1`
+	var reval Occurrence
+	err := db.QueryRow(query, id).Scan(&reval.ActionId, &reval.Time)
+	check(err)
+	reval.Id = id
+	return &reval, err
+}
+
+func (db DB) GetOccurrencesOfAction(id int) ([]Occurrence, error) {
+	const query = `SELECT * from occurrences where action_id = $1`
+	var reval []Occurrence
 
 	rows, err := db.Query(query)
 	check(err)
 	defer rows.Close()
 	for rows.Next() {
-		var action Action
-		err := rows.Scan(&action.Id, &action.ActionName)
+		var occurrence Occurrence
+		err := rows.Scan(&occurrence.Id, &occurrence.ActionId, &occurrence.Time)
 		check(err)
-		reval = append(reval, action)
+		reval = append(reval, occurrence)
 	}
 	return reval, err
-
 }
 
-func (db DB) DropActionTable() error {
-	const query = `DROP TABLE actions`
+// Table Creation and Dropping
+
+func (db DB) CreateActionTable() error {
+	const query = `CREATE TABLE actions(id SERIAL PRIMARY KEY, action_name varchar(255))`
 
 	_, err := db.Exec(query)
 
 	return err
 }
 
-func (db DB) CreateActionTable() error {
-	const query = `CREATE TABLE actions(id SERIAL PRIMARY KEY, action_name varchar(255))`
+func (db DB) DropActionTable() error {
+	const query = `DROP TABLE actions`
 
 	_, err := db.Exec(query)
 
