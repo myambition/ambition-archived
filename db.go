@@ -80,6 +80,14 @@ func (db DB) GetOccurrencesOfAction(id int) ([]Occurrence, error) {
 	return reval, err
 }
 
+func (db DB) InsertOccurrence(occurrence *Occurrence) error {
+	const query = `INSERT INTO occurrences (action_id, time) VALUES ($1, $2)`
+
+	_, err := db.Exec(query, occurrence.ActionId, occurrence.Time)
+
+	return err
+}
+
 func (db DB) InsertOccurrenceOfAction(actionId int, occurrence *Occurrence) error {
 	const query = `INSERT INTO occurrences (action_id, time) VALUES ($1, $2)`
 	_, err := db.Exec(query, actionId, occurrence.Time)
@@ -99,6 +107,22 @@ func (db DB) CreateActionTable() error {
 
 func (db DB) DropActionTable() error {
 	const query = `DROP TABLE actions`
+
+	_, err := db.Exec(query)
+
+	return err
+}
+
+func (db DB) CreateOccurrenceTable() error {
+	const query = `CREATE TABLE occurrences(id SERIAL PRIMARY KEY, action_id varchar(255), time timestamp)`
+
+	_, err := db.Exec(query)
+
+	return err
+}
+
+func (db DB) DropOccurrenceTable() error {
+	const query = `DROP TABLE occurrences`
 
 	_, err := db.Exec(query)
 

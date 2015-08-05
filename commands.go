@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	//	"reflect"
 )
@@ -23,20 +21,16 @@ func (db DB) dropTables() {
 	db.DropTable(&Occurrence{})
 }
 */
+
+//Fix this method to use jsonHandler.go
 func (db DB) seedTables() {
-	seedJSON, err := ioutil.ReadFile("./config/seed.json")
+	actionJson, err := ioutil.ReadFile("./config/actions-seed.json")
 	check(err)
-	fmt.Print(string(seedJSON))
+	occurrenceJson, err := ioutil.ReadFile("./config/occurrences-seed.json")
+	check(err)
 
-	var seed []Action
-
-	json.Unmarshal(seedJSON, &seed)
-
-	fmt.Print(seed)
-
-	for _, action := range seed {
-		db.InsertAction(&action)
-	}
+	PostArrayOfActionsJson(actionJson)
+	PostArrayOfOccurrencesJson(occurrenceJson)
 
 }
 

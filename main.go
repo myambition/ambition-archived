@@ -16,6 +16,7 @@ var _commands = map[string]func(){
 
 func main() {
 	defer database.Close()
+	oneOff()
 	if len(os.Args) > 1 {
 		command := _commands[os.Args[1]]
 		if command != nil {
@@ -30,4 +31,15 @@ func main() {
 
 		http.ListenAndServe(":3000", router)
 	}
+}
+
+func oneOff() {
+
+	// database.DropActionTable()
+	// database.CreateActionTable()
+	// err := database.DropOccurrenceTable()
+	// check(err)
+	// err = database.CreateOccurrenceTable()
+	// check(err)
+
 }
