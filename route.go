@@ -12,11 +12,11 @@ var getRoutes = map[string]func(){
 */
 func AddRoutes(router *httprouter.Router) {
 	router.GET("/actions", actions)
-	router.GET("/actions/:id", actionById)
+	router.GET("/actions/:ActionId", actionById)
 
 	//TODO
-	//router.POST("/actions/:id", postOccurrence)
+	//router.POST("/actions/:ActionId", postOccurrence)
 	//router.GET("/sets", sets)
-	//router.GET("/sets/:id/actions", actionsFromSet)
-	//router.GET("/actions/:id/occurrences", occurrences)
+	//router.GET("/sets/:SetId/actions", actionsFromSet)
+	router.GET("/actions/:ActionId/occurrences", occurrences)
 }

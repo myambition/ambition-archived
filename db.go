@@ -85,6 +85,14 @@ func (db DB) GetOccurrencesOfAction(id int) ([]Occurrence, error) {
 	return reval, err
 }
 
+func (db DB) InsertOccurrenceOfAction(actionId int, occurrence *Occurrence) error {
+	const query = `INSERT INTO occurrences (action_id, time) VALUES ($1, $2)`
+	_, err := db.Exec(query, actionId, occurrence.Time)
+	check(err)
+
+	return err
+}
+
 // Table Creation and Dropping
 
 func (db DB) CreateActionTable() error {

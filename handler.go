@@ -28,7 +28,7 @@ func actions(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func actionById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	id, err := strconv.Atoi(ps.ByName("id"))
+	id, err := strconv.Atoi(ps.ByName("ActionId"))
 	check(err)
 
 	action_by_id, err := database.GetActionById(id)
@@ -40,38 +40,45 @@ func actionById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Fprintf(w, "%s", string(action_json))
 }
 
-/*
-
 func occurrences(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	occurrences := []Occurrence{}
-
-	end := time.Now()
-	//Ok to subtract time in golang you must add negative time. Time.Sub is not the same thing
-	start := time.Now().Add(-1 * time.Hour * 24 * 7)
-
-	q := r.URL.Query()
-
-	if len(q.Get("start")) > 0 {
-		start, _ = time.Parse(time.RFC3339, q.Get("start"))
-	}
-
-	if len(q.Get("end")) > 0 {
-		end, _ = time.Parse(time.RFC3339, q.Get("end"))
-	}
-
-	database.d.Where(
-		"Action_ID = ? AND TIME BETWEEN ? AND ?",
-		ps.ByName("id"), start.Format(time.RFC3339),
-		end.Format(time.RFC3339)).
-		Find(&occurrences)
-
-	occurrences_json, err := json.Marshal(occurrences)
+	id, err := strconv.Atoi(ps.ByName("ActionId"))
 	check(err)
 
-	fmt.Fprintf(w, "%s", string(occurrences_json))
+	occurrences, err := database.GetOccurrencesOfAction(id)
+	check(err)
+
+	occurrencesJson, err := json.Marshal(occurrences)
+	check(err)
+
+	fmt.Fprintf(w, "%s", string(occurrencesJson))
+
+	//	end := time.Now()
+	//	//Ok to subtract time in golang you must add negative time. Time.Sub is not the same thing
+	//	start := time.Now().Add(-1 * time.Hour * 24 * 7)
+	//
+	//	q := r.URL.Query()
+	//
+	//	if len(q.Get("start")) > 0 {
+	//		start, _ = time.Parse(time.RFC3339, q.Get("start"))
+	//	}
+	//
+	//	if len(q.Get("end")) > 0 {
+	//		end, _ = time.Parse(time.RFC3339, q.Get("end"))
+	//	}
+	//
+	//	database.d.Where(
+	//		"Action_ID = ? AND TIME BETWEEN ? AND ?",
+	//		ps.ByName("id"), start.Format(time.RFC3339),
+	//		end.Format(time.RFC3339)).
+	//		Find(&occurrences)
+	//
+	//	occurrences_json, err := json.Marshal(occurrences)
+	//	check(err)
+	//
+	//	fmt.Fprintf(w, "%s", string(occurrences_json))
 }
 
-
+/*
 func postOccurrence(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	occurrenceJSON, err := ioutil.ReadAll(r.Body)
 	check(err)
