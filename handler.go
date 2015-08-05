@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
-	//	"io/ioutil"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 	//	"time"
@@ -15,7 +15,7 @@ func handler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Fprint(w, "ambition!")
 }
 */
-func actions(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func Actions(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	all_actions, err := database.GetActions()
 	check(err)
 
@@ -27,7 +27,7 @@ func actions(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Fprintf(w, "%s", string(actions_json))
 }
 
-func actionById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func ActionById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id, err := strconv.Atoi(ps.ByName("ActionId"))
 	check(err)
 
@@ -40,7 +40,7 @@ func actionById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Fprintf(w, "%s", string(action_json))
 }
 
-func occurrences(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func Occurrences(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id, err := strconv.Atoi(ps.ByName("ActionId"))
 	check(err)
 
@@ -78,22 +78,19 @@ func occurrences(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	//	fmt.Fprintf(w, "%s", string(occurrences_json))
 }
 
-/*
-func postOccurrence(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	occurrenceJSON, err := ioutil.ReadAll(r.Body)
+func PostOccurrence(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	occurrenceJson, err := ioutil.ReadAll(r.Body)
 	check(err)
 
-	var occurence Occurrence
-
-	json.Unmarshal(occurrenceJSON, &occurence)
-	i, err := strconv.Atoi(ps.ByName("id"))
+	id, err := strconv.Atoi(ps.ByName("ActionId"))
 	check(err)
 
-	occurence.ActionId = i
+	err = PostOccurrenceByActionIdJson(id, occurrenceJson)
+	check(err)
 
-	database.d.Create(&occurence)
 }
 
+/*
 func sets(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	all_sets := []Set{}
 
