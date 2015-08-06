@@ -90,6 +90,20 @@ func PostOccurrence(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 
 }
 
+func OccurrenceId(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id, err := strconv.Atoi(ps.ByName("OccurrenceId"))
+	check(err)
+
+	occurrence, err := database.GetOccurrenceById(id)
+	check(err)
+
+	occurrenceJson, err := json.Marshal(occurrence)
+	check(err)
+
+	fmt.Fprintf(w, "%s", string(occurrenceJson))
+
+}
+
 /*
 func sets(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	all_sets := []Set{}

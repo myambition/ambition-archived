@@ -25,7 +25,7 @@ func getTable(obj interface{}) string {
 }
 
 func (db DB) GetActions() ([]Action, error) {
-	const query = `SELECT * from actions`
+	const query = `SELECT * FROM actions`
 	var reval []Action
 
 	rows, err := db.Query(query)
@@ -40,7 +40,7 @@ func (db DB) GetActions() ([]Action, error) {
 }
 
 func (db DB) GetActionById(id int) (*Action, error) {
-	const query = `SELECT action_name from actions where id = $1`
+	const query = `SELECT action_name FROM actions WHERE id = $1`
 	var reval Action
 	err := db.QueryRow(query, id).Scan(&reval.ActionName)
 	reval.Id = id
@@ -55,10 +55,18 @@ func (db DB) InsertAction(action *Action) error {
 	return err
 }
 
+func (db DB) DeleteActionById(actionId int) error {
+	const query = `DELETE FROM actions WHERE id = $1`
+
+	_, err := db.Exec(query, actionId)
+
+	return err
+}
+
 // -------------- Occurrences ------------------ //
 
 func (db DB) GetOccurrenceById(id int) (*Occurrence, error) {
-	const query = `SELECT action_name,time from occurrences where id = $1`
+	const query = `SELECT (action_name, time) FROM occurrences WHERE id = $1`
 	var reval Occurrence
 	err := db.QueryRow(query, id).Scan(&reval.ActionId, &reval.Time)
 	reval.Id = id
@@ -66,7 +74,7 @@ func (db DB) GetOccurrenceById(id int) (*Occurrence, error) {
 }
 
 func (db DB) GetOccurrencesOfAction(id int) ([]Occurrence, error) {
-	const query = `SELECT * from occurrences where action_id = $1`
+	const query = `SELECT * FROM occurrences WHERE action_id = $1`
 	var reval []Occurrence
 
 	rows, err := db.Query(query)
@@ -91,6 +99,14 @@ func (db DB) InsertOccurrence(occurrence *Occurrence) error {
 func (db DB) InsertOccurrenceOfAction(actionId int, occurrence *Occurrence) error {
 	const query = `INSERT INTO occurrences (action_id, time) VALUES ($1, $2)`
 	_, err := db.Exec(query, actionId, occurrence.Time)
+
+	return err
+}
+
+func (db DB) DeleteOccurrenceById(occurrenceId int) error {
+	const query = `DELETE FROM occurrences WHERE id = $1`
+
+	_, err := db.Exec(query, occurrenceId)
 
 	return err
 }
