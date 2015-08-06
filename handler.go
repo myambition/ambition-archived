@@ -90,7 +90,7 @@ func PostOccurrence(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 
 }
 
-func OccurrenceId(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func OccurrenceById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id, err := strconv.Atoi(ps.ByName("OccurrenceId"))
 	check(err)
 
@@ -101,7 +101,6 @@ func OccurrenceId(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	check(err)
 
 	fmt.Fprintf(w, "%s", string(occurrenceJson))
-
 }
 
 /*
