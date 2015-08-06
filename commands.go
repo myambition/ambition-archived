@@ -5,24 +5,16 @@ import (
 	//	"reflect"
 )
 
-/*
 func (db DB) createTables() {
-	fmt.Print(reflect.TypeOf(db))
-	db.CreateTable(&Set{})
-	db.CreateTable(&Action{})
-	db.CreateTable(&Occurrence{})
-
+	database.CreateActionTable()
+	database.CreateOccurrenceTable()
 }
 
 func (db DB) dropTables() {
-	db.DropTable(&User{})
-	db.DropTable(&Set{})
-	db.DropTable(&Action{})
-	db.DropTable(&Occurrence{})
+	database.DropActionTable()
+	database.DropActionTable()
 }
-*/
 
-//Fix this method to use jsonHandler.go
 func (db DB) seedTables() {
 	actionJson, err := ioutil.ReadFile("./config/actions-seed.json")
 	check(err)
@@ -31,7 +23,6 @@ func (db DB) seedTables() {
 
 	PostArrayOfActionsJson(actionJson)
 	PostArrayOfOccurrencesJson(occurrenceJson)
-
 }
 
 /*

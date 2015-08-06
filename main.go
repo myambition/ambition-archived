@@ -8,9 +8,9 @@ import (
 )
 
 var _commands = map[string]func(){
-	"seed": database.seedTables,
-	//"create":  database.createTables,
-	//"drop":    database.dropTables,
+	"seed":   database.seedTables,
+	"create": database.createTables,
+	"drop":   database.dropTables,
 	//"refresh": database.refreshTables,
 }
 
