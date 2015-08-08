@@ -24,6 +24,45 @@ func getTable(obj interface{}) string {
 	}
 }
 
+func (db DB) GetSets() ([]Set, error) {
+	const query = `SELECT * FROM sets`
+	var reval []Set
+
+	rows, err := db.Query(query)
+	defer rows.Close()
+	for rows.Next() {
+		var set Set
+		err := rows.Scan(&set.Id, &set.ActionName)
+		check(err)
+		reval = append(reval, set)
+	}
+	return reval, err
+}
+
+func (db DB) GetSetById(id int) (*Set, error) {
+	const query = `SELECT set_name FROM sets WHERE id = $1`
+	var reval Set
+	err := db.QueryRow(query, id).Scan(&reval.SetName)
+	reval.Id = id
+	return &reval, err
+}
+
+func (db DB) InsertSet(set *Set) error {
+	const query = `INSERT INTO sets (set_name) VALUES ($1)`
+
+	_, err := db.Exec(query, set.SetName)
+
+	return err
+}
+
+func (db DB) DeleteSetById(setId int) error {
+	const query = `DELETE FROM sets WHERE id = $1`
+
+	_, err := db.Exec(query, setId)
+
+	return err
+}
+
 func (db DB) GetActions() ([]Action, error) {
 	const query = `SELECT * FROM actions`
 	var reval []Action
@@ -112,6 +151,22 @@ func (db DB) DeleteOccurrenceById(occurrenceId int) error {
 }
 
 // Table Creation and Dropping
+
+func (db DB) CreateSetTable() error {
+	const query = `CREATE TABLE sets(id SERIAL PRIMARY KEY, set_name varchar(255))`
+
+	_, err := db.Exec(query)
+
+	return err
+}
+
+func (db DB) DropSetTable() error {
+	const query = `DROP TABLE sets`
+
+	_, err := db.Exec(query)
+
+	return err
+}
 
 func (db DB) CreateActionTable() error {
 	const query = `CREATE TABLE actions(id SERIAL PRIMARY KEY, action_name varchar(255))`

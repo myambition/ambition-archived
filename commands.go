@@ -6,11 +6,13 @@ import (
 )
 
 func (db DB) createTables() {
+	database.CreateSetTable()
 	database.CreateActionTable()
 	database.CreateOccurrenceTable()
 }
 
 func (db DB) dropTables() {
+	database.DropSetTable()
 	database.DropActionTable()
 	database.DropActionTable()
 }
