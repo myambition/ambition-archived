@@ -12,7 +12,6 @@ func PostOccurrenceByActionIdJson(ActionId int, occurrenceJson []byte) error {
 	return err
 }
 
-// Needs work
 func PostActionBySetIdJson(SetId int, actionJson []byte) error {
 	var action Action
 	err := json.Unmarshal(actionJson, action)
@@ -32,7 +31,6 @@ func PostArrayOfActionsJson(actionJson []byte) error {
 	}
 
 	return err
-
 }
 
 func PostArrayOfOccurrencesJson(occurrenceJson []byte) error {
@@ -44,5 +42,4 @@ func PostArrayOfOccurrencesJson(occurrenceJson []byte) error {
 	}
 
 	return err
-
 }

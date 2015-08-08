@@ -18,11 +18,14 @@ func (db DB) dropTables() {
 }
 
 func (db DB) seedTables() {
+	setJson, err := ioutil.ReadFile("./config/sets-seed.json")
+	check(err)
 	actionJson, err := ioutil.ReadFile("./config/actions-seed.json")
 	check(err)
 	occurrenceJson, err := ioutil.ReadFile("./config/occurrences-seed.json")
 	check(err)
 
+	PostArrayOfSetJson(setJson)
 	PostArrayOfActionsJson(actionJson)
 	PostArrayOfOccurrencesJson(occurrenceJson)
 }

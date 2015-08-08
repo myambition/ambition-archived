@@ -83,6 +83,7 @@ func (db DB) GetActionById(id int) (*Action, error) {
 	var reval Action
 	err := db.QueryRow(query, id).Scan(&reval.ActionName, &reval.SetId)
 	reval.Id = id
+
 	return &reval, err
 }
 
@@ -143,7 +144,7 @@ func (db DB) DeleteOccurrenceById(occurrenceId int) error {
 	return err
 }
 
-// Table Creation and Dropping
+// ------------ Table Creation and Dropping -------------------
 
 func (db DB) CreateSetTable() error {
 	const query = `CREATE TABLE sets(id SERIAL PRIMARY KEY, set_name varchar(255))`
