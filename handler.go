@@ -10,21 +10,16 @@ import (
 	//	"time"
 )
 
-/*
-func handler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	fmt.Fprint(w, "ambition!")
-}
-*/
 func Actions(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	all_actions, err := database.GetActions()
+	allActions, err := database.GetActions()
 	check(err)
 
-	fmt.Println(all_actions)
+	fmt.Println(allActions)
 
-	actions_json, err := json.Marshal(all_actions)
+	actionJson, err := json.Marshal(allActions)
 	check(err)
 
-	fmt.Fprintf(w, "%s", string(actions_json))
+	fmt.Fprintf(w, "%s", string(actionJson))
 }
 
 func ActionById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -38,6 +33,17 @@ func ActionById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	check(err)
 
 	fmt.Fprintf(w, "%s", string(action_json))
+}
+
+func PostAction(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	actionJson, err := ioutil.ReadAll(r.Body)
+	check(err)
+
+	id, err := strconv.Atoi(ps.ByName("SetId"))
+	check(err)
+
+	err = PostOccurrenceByActionIdJson(id, occurrenceJson)
+	check(err)
 }
 
 func Occurrences(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -87,7 +93,6 @@ func PostOccurrence(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 
 	err = PostOccurrenceByActionIdJson(id, occurrenceJson)
 	check(err)
-
 }
 
 func OccurrenceById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {

@@ -143,7 +143,7 @@ func (db DB) DeleteOccurrenceById(occurrenceId int) error {
 	return err
 }
 
-// Table Creation and Dropping
+// ------------ Table Creation and Dropping -------------------
 
 func (db DB) CreateSetTable() error {
 	const query = `CREATE TABLE sets(id SERIAL PRIMARY KEY, set_name varchar(255))`
