@@ -22,6 +22,17 @@ func PostActionBySetIdJson(SetId int, actionJson []byte) error {
 	return err
 }
 
+func PostArrayOfSetsJson(setJson []byte) error {
+	var sets []Set
+	json.Unmarshal(setJson, &sets)
+	var err error
+	for _, set := range sets {
+		err = database.InsertSet(&set)
+	}
+
+	return err
+}
+
 func PostArrayOfActionsJson(actionJson []byte) error {
 	var actions []Action
 	json.Unmarshal(actionJson, &actions)

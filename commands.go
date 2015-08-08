@@ -25,7 +25,7 @@ func (db DB) seedTables() {
 	occurrenceJson, err := ioutil.ReadFile("./config/occurrences-seed.json")
 	check(err)
 
-	PostArrayOfSetJson(setJson)
+	PostArrayOfSetsJson(setJson)
 	PostArrayOfActionsJson(actionJson)
 	PostArrayOfOccurrencesJson(occurrenceJson)
 }

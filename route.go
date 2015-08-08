@@ -13,6 +13,7 @@ var getRoutes = map[string]func(){
 func AddRoutes(router *httprouter.Router) {
 	router.GET("/actions", Actions)
 	router.GET("/actions/:ActionId", ActionById)
+	router.POST("/set/:SetId", PostAction)
 
 	//TODO
 	//router.POST("/actions/:ActionId", postOccurrence)

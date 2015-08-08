@@ -40,7 +40,7 @@ func PostAction(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id, err := strconv.Atoi(ps.ByName("SetId"))
 	check(err)
 
-	err = PostAction(id, actionJson)
+	err = PostActionBySetIdJson(id, actionJson)
 	check(err)
 }
 
