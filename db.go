@@ -94,14 +94,6 @@ func (db DB) InsertAction(action *Action) error {
 	return err
 }
 
-func (db DB) InsetActionOfSet(setId int, action *Action) error {
-	const query = `INSERT INTO actions (action_name, set_id) VALUES (`
-
-	_, err := db.Exec(query, setId)
-
-	return err
-}
-
 func (db DB) DeleteActionById(actionId int) error {
 	const query = `DELETE FROM actions WHERE id = $1`
 
@@ -139,13 +131,6 @@ func (db DB) InsertOccurrence(occurrence *Occurrence) error {
 	const query = `INSERT INTO occurrences (action_id, time) VALUES ($1, $2)`
 
 	_, err := db.Exec(query, occurrence.ActionId, occurrence.Time)
-
-	return err
-}
-
-func (db DB) InsertOccurrenceOfAction(actionId int, occurrence *Occurrence) error {
-	const query = `INSERT INTO occurrences (action_id, time) VALUES ($1, $2)`
-	_, err := db.Exec(query, actionId, occurrence.Time)
 
 	return err
 }
