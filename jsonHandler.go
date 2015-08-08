@@ -6,15 +6,19 @@ import (
 
 func PostOccurrenceByActionIdJson(ActionId int, occurrenceJson []byte) error {
 	occurrence, err := UnmarshalOccurrence(occurrenceJson)
-	database.InsertOccurrenceOfAction(ActionId, occurrence)
+	occurrence.ActionId = ActionId
+	database.InsertOccurrence(occurrence)
 
 	return err
 }
 
 // Needs work
-func PostActionBySetIdJson(ActionId int, occurrenceJson []byte) error {
-	occurrence, err := UnmarshalOccurrence(occurrenceJson)
-	database.InsertOccurrenceOfAction(ActionId, occurrence)
+func PostActionBySetIdJson(SetId int, actionJson []byte) error {
+	var action Action
+	err := json.Unmarshal(actionJson, action)
+
+	action.SetId = SetId
+	database.InsertAction(&action)
 
 	return err
 }

@@ -19,6 +19,7 @@ type Set struct {
 type Action struct {
 	Id         int
 	ActionName string
+	SetId      int
 }
 
 type Occurrence struct {

@@ -32,7 +32,7 @@ func (db DB) GetSets() ([]Set, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var set Set
-		err := rows.Scan(&set.Id, &set.ActionName)
+		err := rows.Scan(&set.Id, &set.SetName)
 		check(err)
 		reval = append(reval, set)
 	}
@@ -79,17 +79,25 @@ func (db DB) GetActions() ([]Action, error) {
 }
 
 func (db DB) GetActionById(id int) (*Action, error) {
-	const query = `SELECT action_name FROM actions WHERE id = $1`
+	const query = `SELECT action_name, set_id FROM actions WHERE id = $1`
 	var reval Action
-	err := db.QueryRow(query, id).Scan(&reval.ActionName)
+	err := db.QueryRow(query, id).Scan(&reval.ActionName, &reval.SetId)
 	reval.Id = id
 	return &reval, err
 }
 
 func (db DB) InsertAction(action *Action) error {
-	const query = `INSERT INTO actions (action_name) VALUES ($1)`
+	const query = `INSERT INTO actions (action_name, set_id) VALUES ($1, $2))`
 
-	_, err := db.Exec(query, action.ActionName)
+	_, err := db.Exec(query, action.ActionName, action.SetId)
+
+	return err
+}
+
+func (db DB) InsetActionOfSet(setId int, action *Action) error {
+	const query = `INSERT INTO actions (action_name, set_id) VALUES (`
+
+	_, err := db.Exec(query, setId)
 
 	return err
 }
