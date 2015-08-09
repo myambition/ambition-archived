@@ -44,6 +44,17 @@ func PostAction(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	check(err)
 }
 
+func PostAction(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	actionJson, err := ioutil.ReadAll(r.Body)
+	check(err)
+
+	id, err := strconv.Atoi(ps.ByName("SetId"))
+	check(err)
+
+	err = PostOccurrenceByActionIdJson(id, occurrenceJson)
+	check(err)
+}
+
 func Occurrences(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id, err := strconv.Atoi(ps.ByName("ActionId"))
 	check(err)
