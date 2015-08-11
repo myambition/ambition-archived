@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
-	//	"time"
 )
 
 func Actions(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -55,6 +54,9 @@ func PostAction(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	check(err)
 }
 
+// TODO:
+// Add time as a query string parameter. Allow the user to specify how many they want
+// also make a week the default amount
 func Occurrences(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id, err := strconv.Atoi(ps.ByName("ActionId"))
 	check(err)
@@ -116,27 +118,3 @@ func OccurrenceById(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 
 	fmt.Fprintf(w, "%s", string(occurrenceJson))
 }
-
-/*
-func sets(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	all_sets := []Set{}
-
-	database.d.Find(&all_sets)
-
-	sets_json, err := json.Marshal(all_sets)
-	check(err)
-
-	fmt.Fprintf(w, "%s", sets_json)
-}
-
-func actionsFromSet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	actions := []Action{}
-
-	database.d.Where("Action_ID = ?", ps.ByName("id")).Find(&actions)
-
-	actions_json, err := json.Marshal(actions)
-	check(err)
-
-	fmt.Fprintf(w, "%s", actions_json)
-}
-*/

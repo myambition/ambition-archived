@@ -5,7 +5,9 @@ import (
 )
 
 func PostOccurrenceByActionIdJson(ActionId int, occurrenceJson []byte) error {
-	occurrence, err := UnmarshalOccurrence(occurrenceJson)
+	var occurrence Occurrence
+	err := json.Unmarshal(occurrenceJson, occurrence)
+
 	occurrence.ActionId = ActionId
 	database.InsertOccurrence(occurrence)
 

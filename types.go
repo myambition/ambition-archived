@@ -15,12 +15,16 @@ type Set struct {
 	SetName string `json:"setName"`
 }
 
+// TODO: Add metadata / extradata / data field. It can have any structure.
+//		 Action specifies the structure.
 type Action struct {
 	Id         int    `json:"id"`
 	ActionName string `json:"actionName"`
 	SetId      int    `json:"setId"`
 }
 
+// TODO: Add metadata / extradata / data field. It can have any structure.
+//		 Occurrence should follow the sturcture specified in Action.
 type Occurrence struct {
 	Id       int       `json:"id"`
 	ActionId int       `json:"actionId"`

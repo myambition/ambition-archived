@@ -5,25 +5,19 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// Database type to extend with custom functions
 type DB struct {
 	*sql.DB
 }
 
+// Database initialization
+// TODO: Add seting up postgresql
 var tempdb, _ = sql.Open("postgres", "dbname=ambition user=ambition password=ambition sslmode=disable")
 
+// Create a database type to extend
 var database = DB{tempdb}
 
-func getTable(obj interface{}) string {
-	switch obj.(type) {
-	default:
-		return "unknown"
-	case Action, *Action:
-		return "actions"
-	case Set, *Set:
-		return "sets"
-	}
-}
-
+// ----------------------------- Sets  ----------------------------- //
 func (db DB) GetSets() ([]Set, error) {
 	const query = `SELECT * FROM sets`
 	var reval []Set
@@ -62,6 +56,8 @@ func (db DB) DeleteSetById(setId int) error {
 
 	return err
 }
+
+// ----------------------------- Actions  ----------------------------- //
 
 func (db DB) GetActions() ([]Action, error) {
 	const query = `SELECT * FROM actions`
@@ -103,7 +99,7 @@ func (db DB) DeleteActionById(actionId int) error {
 	return err
 }
 
-// -------------- Occurrences ------------------ //
+// ----------------------------- Occurrences  ----------------------------- //
 
 func (db DB) GetOccurrenceById(id int) (*Occurrence, error) {
 	const query = `SELECT (action_name, time) FROM occurrences WHERE id = $1`
@@ -192,4 +188,17 @@ func (db DB) DropOccurrenceTable() error {
 	_, err := db.Exec(query)
 
 	return err
+}
+
+// FUTURE:
+// Will allow combining CreateTable and DropTable functions
+func getTable(obj interface{}) string {
+	switch obj.(type) {
+	default:
+		return "unknown"
+	case Action, *Action:
+		return "actions"
+	case Set, *Set:
+		return "sets"
+	}
 }

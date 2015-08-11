@@ -2,7 +2,6 @@ package main
 
 import (
 	"io/ioutil"
-	//	"reflect"
 )
 
 func (db DB) createTables() {
@@ -29,11 +28,3 @@ func (db DB) seedTables() {
 	PostArrayOfActionsJson(actionJson)
 	PostArrayOfOccurrencesJson(occurrenceJson)
 }
-
-/*
-func (db DB) refreshTables() {
-	database.dropTables()
-	database.createTables()
-	database.seedTables()
-}
-*/
