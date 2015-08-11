@@ -9,6 +9,9 @@ import (
 	"strconv"
 )
 
+// TODO:
+// Remove encoding/json, create passthrough methods in jsonHandler.go if needed
+
 func Actions(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	allActions, err := database.GetActions()
 	check(err)
@@ -40,17 +43,6 @@ func PostAction(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	check(err)
 
 	err = PostActionBySetIdJson(id, actionJson)
-	check(err)
-}
-
-func PostAction(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	actionJson, err := ioutil.ReadAll(r.Body)
-	check(err)
-
-	id, err := strconv.Atoi(ps.ByName("SetId"))
-	check(err)
-
-	err = PostOccurrenceByActionIdJson(id, occurrenceJson)
 	check(err)
 }
 

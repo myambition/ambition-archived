@@ -9,7 +9,7 @@ func PostOccurrenceByActionIdJson(ActionId int, occurrenceJson []byte) error {
 	err := json.Unmarshal(occurrenceJson, occurrence)
 
 	occurrence.ActionId = ActionId
-	database.InsertOccurrence(occurrence)
+	database.InsertOccurrence(&occurrence)
 
 	return err
 }
