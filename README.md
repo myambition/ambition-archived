@@ -4,8 +4,9 @@ Action tracking
 
 ## Setup
 
-
-Install go [(Instructions here)](https://golang.org/doc/install)
+```
+go get github.com/adamryman/ambition
+```
 
 ### Setup Postgresql
 
