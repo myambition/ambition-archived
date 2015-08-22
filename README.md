@@ -6,6 +6,8 @@ Action tracking
 
 ```
 go get github.com/adamryman/ambition
+
+export ambition_port=port
 ```
 
 ### Setup Postgresql
@@ -28,6 +30,15 @@ $ psql
 $ # ALTER USER ambition PASSWORD ‘ambition';
 
 $ exit
+```
+
+Set env for postgres
+
+```
+export ambition_dbname=ambition
+export ambition_usename=ambition
+export ambition_password=ambition
+
 ```
 
 ## Usage
