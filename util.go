@@ -1,4 +1,4 @@
-package main
+package ambition
 
 func check(e error) {
 	if e != nil {

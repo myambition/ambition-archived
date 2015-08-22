@@ -1,4 +1,4 @@
-package main
+package ambition
 
 import (
 	"fmt"
@@ -13,10 +13,9 @@ var _commands = map[string]func(){
 	"drop":   database.dropTables,
 }
 
-func main() {
+func Run() {
 	// database located in db.go
 	defer database.Close()
-	oneOff()
 
 	// Check fof command line arguments
 	if len(os.Args) > 1 {
@@ -36,9 +35,4 @@ func main() {
 		// Start the http server
 		http.ListenAndServe(":3000", router)
 	}
-}
-
-// Code that can be run once at the start of ambition. To be removed
-func oneOff() {
-
 }
