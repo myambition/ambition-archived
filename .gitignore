@@ -4,8 +4,7 @@
 *.so
 
 # Folders
-_obj
-_test
+_obj _test
 
 # Architecture specific extensions/prefixes
 *.[568vq]
@@ -24,8 +23,11 @@ _testmain.go
 *.test
 *.prof
 
-#vim
+# vim
 *.swp
 
-#binary
+# binary
 ambition
+
+#
+__render/
