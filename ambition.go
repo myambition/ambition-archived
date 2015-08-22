@@ -13,6 +13,8 @@ var _commands = map[string]func(){
 	"drop":   database.dropTables,
 }
 
+var port = os.Getenv("ambition_port")
+
 func Run() {
 	// database located in db.go
 	defer database.Close()
@@ -33,6 +35,6 @@ func Run() {
 		AddRoutes(router)
 
 		// Start the http server
-		http.ListenAndServe(":3000", router)
+		http.ListenAndServe(fmt.Sprintf(":%s", port), router)
 	}
 }

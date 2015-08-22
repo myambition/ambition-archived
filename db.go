@@ -2,7 +2,9 @@ package ambition
 
 import (
 	"database/sql"
+	"fmt"
 	_ "github.com/lib/pq"
+	"os"
 )
 
 // Database type to extend with custom functions
@@ -12,7 +14,11 @@ type DB struct {
 
 // Database initialization
 // TODO: Add seting up postgresql
-var tempdb, _ = sql.Open("postgres", "dbname=ambition user=ambition password=ambition sslmode=disable")
+var dbname = os.Getenv("ambition_dbname")
+var user = os.Getenv("ambition_username")
+var password = os.Getenv("ambition_password")
+
+var tempdb, _ = sql.Open("postgres", fmt.Sprintf("dbname=%s user=%s password=%s", dbname, user, password))
 
 // Create a database type to extend
 var database = DB{tempdb}
