@@ -1,30 +1,46 @@
 package ambition
 
 import (
+	"errors"
 	"io/ioutil"
 )
 
-func (db DB) createTables() {
-	database.CreateSetTable()
-	database.CreateActionTable()
-	database.CreateOccurrenceTable()
+func createTables(db DB) {
+	db.CreateSetTable()
+	db.CreateActionTable()
+	db.CreateOccurrenceTable()
 }
 
-func (db DB) dropTables() {
-	database.DropSetTable()
-	database.DropActionTable()
-	database.DropActionTable()
+func dropTables(db DB) {
+	db.DropSetTable()
+	db.DropActionTable()
+	db.DropOccurrenceTable()
 }
 
-func (db DB) seedTables() {
-	setJson, err := ioutil.ReadFile("./config/sets-seed.json")
+func seedTables() {
+	setJson, err := ioutil.ReadFile("../testdata/seed-data/sets-seed.json")
 	check(err)
-	actionJson, err := ioutil.ReadFile("./config/actions-seed.json")
+	actionJson, err := ioutil.ReadFile("../testdata/seed-data/actions-seed.json")
 	check(err)
-	occurrenceJson, err := ioutil.ReadFile("./config/occurrences-seed.json")
+	occurrenceJson, err := ioutil.ReadFile("../testdata/seed-data/occurrences-seed.json")
 	check(err)
 
 	PostArrayOfSetsJson(setJson)
 	PostArrayOfActionsJson(actionJson)
 	PostArrayOfOccurrencesJson(occurrenceJson)
+}
+
+func CallCommand(command string) error {
+	switch command {
+	case "seed":
+		seedTables()
+	case "create":
+		createTables(database)
+	case "drop":
+		dropTables(database)
+	default:
+		return errors.New("Command Not Found")
+	}
+
+	return nil
 }
