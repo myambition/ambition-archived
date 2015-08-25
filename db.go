@@ -90,7 +90,7 @@ func (db DB) GetActionById(id int) (*Action, error) {
 }
 
 func (db DB) InsertAction(action *Action) error {
-	const query = `INSERT INTO actions (action_name, set_id) VALUES ($1, $2))`
+	const query = `INSERT INTO actions (action_name, set_id) VALUES ($1, $2)`
 
 	_, err := db.Exec(query, action.ActionName, action.SetId)
 
@@ -165,7 +165,7 @@ func (db DB) DropSetTable() error {
 }
 
 func (db DB) CreateActionTable() error {
-	const query = `CREATE TABLE actions(id SERIAL PRIMARY KEY, action_name varchar(255))`
+	const query = `CREATE TABLE actions(id SERIAL PRIMARY KEY, action_name varchar(255), set_id integer)`
 
 	_, err := db.Exec(query)
 
@@ -181,7 +181,7 @@ func (db DB) DropActionTable() error {
 }
 
 func (db DB) CreateOccurrenceTable() error {
-	const query = `CREATE TABLE occurrences(id SERIAL PRIMARY KEY, action_id varchar(255), time timestamp)`
+	const query = `CREATE TABLE occurrences(id SERIAL PRIMARY KEY, action_id integer, time timestamp)`
 
 	_, err := db.Exec(query)
 
