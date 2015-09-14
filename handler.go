@@ -4,10 +4,20 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
+	"html/template"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 )
+
+func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	dat, err := ioutil.ReadFile("./html/index.html")
+	_ = dat
+	check(err)
+	t, err := template.ParseFiles("./html/index.html")
+	actions, err := database.GetActions()
+	t.Execute(w, actions)
+}
 
 // TODO:
 // Remove encoding/json, create passthrough methods in jsonHandler.go if needed
