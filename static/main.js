@@ -10,11 +10,11 @@ $('.list-group-item').on({
 function activate(that) {
     $('#main').find('.active').removeClass('active');
     $(that).addClass('active');
-
+    var data = { time: new Date().toISOString() };
     $.ajax({
         type: "POST",
         url: serverRoot + "/actions/" + $(that).attr("dbid"),
-        data: { time: Date.now().toISOString() },
+        data: JSON.stringify(data),
         sucess: function () { alert("woo");}
     })
 }
