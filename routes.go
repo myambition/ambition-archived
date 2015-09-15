@@ -10,7 +10,7 @@ func AddRoutes(router *httprouter.Router) {
 	router.GET("/actions", Actions)
 	router.GET("/actions/:ActionId", ActionById)
 	router.POST("/set/:SetId", PostAction)
-	router.GET("/actions/:ActionId/occrurrences", Occurrences)
+	router.GET("/actions/:ActionId/occurrences", Occurrences)
 	router.GET("/occurrences/:OccurrenceId", OccurrenceById)
 
 	// TODO:
