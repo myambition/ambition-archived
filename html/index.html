@@ -12,7 +12,7 @@
 	<div class="list-group" id="main">
 		<a class="list-group-item" id="title">Ambition</a>
 		{{range $index, $element := .}}
-		<a class="list-group-item">{{.ActionName}}</a>
+		<a class="list-group-item" dbid="{{.Id}}">{{.ActionName}}</a>
 		{{end}}
 	</div>
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
