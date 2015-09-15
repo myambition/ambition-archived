@@ -119,7 +119,7 @@ func (db DB) GetOccurrencesOfAction(id int) ([]Occurrence, error) {
 	const query = `SELECT * FROM occurrences WHERE action_id = $1`
 	var reval []Occurrence
 
-	rows, err := db.Query(query)
+	rows, err := db.Query(query, id)
 	defer rows.Close()
 	for rows.Next() {
 		var occurrence Occurrence
