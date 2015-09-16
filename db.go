@@ -148,6 +148,21 @@ func (db DB) DeleteOccurrenceById(occurrenceId int) error {
 
 // ------------ Table Creation and Dropping -------------------
 
+func (db DB) CreateUserTable() error {
+	const query = `CREATE TABLE users(id SERIAL PRIMARY KEY, username varchar(255), email varchar(255), password_salt char(29), hashed_password char(60))`
+
+	_, err := db.Exec(query)
+
+	return err
+}
+
+func (db DB) DropUserTable() error {
+	const query = `DROP TABLE users`
+
+	_, err := db.Exec(query)
+
+	return err
+}
 func (db DB) CreateSetTable() error {
 	const query = `CREATE TABLE sets(id SERIAL PRIMARY KEY, set_name varchar(255))`
 

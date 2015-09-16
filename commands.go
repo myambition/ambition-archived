@@ -6,12 +6,14 @@ import (
 )
 
 func createTables(db DB) {
+	db.CreateUserTable()
 	db.CreateSetTable()
 	db.CreateActionTable()
 	db.CreateOccurrenceTable()
 }
 
 func dropTables(db DB) {
+	db.DropUserTable()
 	db.DropSetTable()
 	db.DropActionTable()
 	db.DropOccurrenceTable()
