@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func LoginUserJson(userJson []byte) (bool, error) {
+func LoginUserJson(userJson []byte) (string, int, error) {
 	var userJsonMap map[string]interface{}
 
 	err := json.Unmarshal(userJson, &userJsonMap)
@@ -17,7 +17,13 @@ func LoginUserJson(userJson []byte) (bool, error) {
 	password := []byte(userJsonMap["password"].(string))
 	hashedPassword := user.HashedPassword
 	auth := CompareSaltAndPasswordToHash(passwordSalt, password, hashedPassword)
-	return auth, err
+	if auth {
+		token, _ := GenerateRandomString(32)
+		database.InsertSession(user.Id, HashToken(token))
+		return token, user.Id, nil
+	}
+
+	return "", 0, err
 }
 
 func PostUserJson(userJson []byte) error {

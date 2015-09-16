@@ -46,7 +46,14 @@ func (db DB) InsertSession(userId int, hashedToken string) error {
 	_, err := db.Exec(query, userId, hashedToken)
 
 	return err
+}
 
+func (db DB) GetSessionKeyByUserId(userId int) (string, error) {
+	const query = `SELECT hashed_token FROM sessions WHERE user_id = $1`
+
+	var reval string
+	err := db.QueryRow(query, userId).Scan(&reval)
+	return reval, err
 }
 
 // ----------------------------- Sets  ----------------------------- //

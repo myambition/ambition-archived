@@ -7,7 +7,7 @@ import (
 // Add routes to http router
 // TODO: Add route description parameters and useage
 func AddRoutes(router *httprouter.Router) {
-	router.GET("/actions", Actions)
+	router.GET("/actions", CheckAuth(Actions))
 	router.GET("/actions/:ActionId", ActionById)
 	router.POST("/set/:SetId", PostAction)
 	router.GET("/actions/:ActionId/occurrences", Occurrences)

@@ -14,8 +14,10 @@ func Login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	userJson, err := ioutil.ReadAll(r.Body)
 	check(err)
 
-	auth, err := LoginUserJson(userJson)
-	fmt.Println(auth)
+	token, userId, err := LoginUserJson(userJson)
+	fmt.Println(userId)
+	cookie := http.Cookie{Name: strconv.Itoa(userId), Value: token}
+	http.SetCookie(w, &cookie)
 }
 
 func PostUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
