@@ -66,14 +66,14 @@ func (db DB) DeleteSetById(setId int) error {
 // ----------------------------- Actions  ----------------------------- //
 
 func (db DB) GetActions() ([]Action, error) {
-	const query = `SELECT * FROM actions`
+	const query = `SELECT id, action_name, set_id FROM actions`
 	var reval []Action
 
 	rows, err := db.Query(query)
 	defer rows.Close()
 	for rows.Next() {
 		var action Action
-		err := rows.Scan(&action.Id, &action.ActionName)
+		err := rows.Scan(&action.Id, &action.ActionName, &action.SetId)
 		check(err)
 		reval = append(reval, action)
 	}
@@ -119,7 +119,7 @@ func (db DB) GetOccurrencesOfAction(id int) ([]Occurrence, error) {
 	const query = `SELECT * FROM occurrences WHERE action_id = $1`
 	var reval []Occurrence
 
-	rows, err := db.Query(query)
+	rows, err := db.Query(query, id)
 	defer rows.Close()
 	for rows.Next() {
 		var occurrence Occurrence
