@@ -4,6 +4,22 @@ import (
 	"encoding/json"
 )
 
+func PostUserJson(userJson []byte) error {
+	var userJsonMap map[string]interface{}
+
+	err := json.Unmarshal(userJson, &userJsonMap)
+
+	var user User
+	password := userJsonMap["password"].(string)
+	user.UserName = userJsonMap["username"].(string)
+	user.Email = userJsonMap["email"].(string)
+	user.PasswordSalt, user.HashedPassword = CreateSaltAndHashedPassword([]byte(password))
+
+	database.InsertUser(&user)
+
+	return err
+}
+
 func PostOccurrenceByActionIdJson(ActionId int, occurrenceJson []byte) error {
 	var occurrence Occurrence
 	err := json.Unmarshal(occurrenceJson, &occurrence)

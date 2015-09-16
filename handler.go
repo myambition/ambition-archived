@@ -4,10 +4,32 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
+	//	"golang.org/x/crypto/bcrypt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 )
+
+// func Login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+// 	userjson, err := ioutil.readall(r.body)
+// 	check(err)
+//
+// 	var userJsonMap map[string]interface{}
+//
+// 	err = json.Unmarshal(userjson, &userJsonMap)
+// 	check(err)
+//
+// }
+
+func PostUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
+	userJson, err := ioutil.ReadAll(r.Body)
+	check(err)
+
+	err = PostUserJson(userJson)
+	check(err)
+
+}
 
 // TODO:
 // Remove encoding/json, create passthrough methods in jsonHandler.go if needed

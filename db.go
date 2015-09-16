@@ -23,6 +23,14 @@ var tempdb, _ = sql.Open("postgres", fmt.Sprintf("dbname=%s user=%s password=%s"
 // Create a database type to extend
 var database = DB{tempdb}
 
+func (db DB) InsertUser(user *User) error {
+	const query = `INSERT INTO users (username, email, password_salt, hashed_password) VALUES ($1,$2,$3,$4)`
+
+	_, err := db.Exec(query, user.UserName, user.Email, user.PasswordSalt, user.HashedPassword)
+
+	return err
+}
+
 // ----------------------------- Sets  ----------------------------- //
 func (db DB) GetSets() ([]Set, error) {
 	const query = `SELECT * FROM sets`
