@@ -10,16 +10,13 @@ import (
 	"strconv"
 )
 
-// func Login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-// 	userjson, err := ioutil.readall(r.body)
-// 	check(err)
-//
-// 	var userJsonMap map[string]interface{}
-//
-// 	err = json.Unmarshal(userjson, &userJsonMap)
-// 	check(err)
-//
-// }
+func Login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	userJson, err := ioutil.ReadAll(r.Body)
+	check(err)
+
+	auth, err := LoginUserJson(userJson)
+	fmt.Println(auth)
+}
 
 func PostUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 

@@ -31,6 +31,15 @@ func (db DB) InsertUser(user *User) error {
 	return err
 }
 
+func (db DB) GetUserByUserName(userName string) (*User, error) {
+	const query = `SELECT id, email, password_salt, hashed_password FROM users WHERE username = $1`
+	var reval User
+
+	err := db.QueryRow(query, userName).Scan(&reval.Id, &reval.Email, &reval.PasswordSalt, &reval.HashedPassword)
+	reval.UserName = userName
+	return &reval, err
+}
+
 // ----------------------------- Sets  ----------------------------- //
 func (db DB) GetSets() ([]Set, error) {
 	const query = `SELECT * FROM sets`
@@ -157,7 +166,7 @@ func (db DB) DeleteOccurrenceById(occurrenceId int) error {
 // ------------ Table Creation and Dropping -------------------
 
 func (db DB) CreateUserTable() error {
-	const query = `CREATE TABLE users(id SERIAL PRIMARY KEY, username varchar(255), email varchar(255), password_salt char(29), hashed_password char(60))`
+	const query = `CREATE TABLE users(id SERIAL PRIMARY KEY, username varchar(255), email varchar(255), password_salt varchar(30), hashed_password varchar(255))`
 
 	_, err := db.Exec(query)
 

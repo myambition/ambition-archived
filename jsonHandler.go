@@ -2,7 +2,23 @@ package ambition
 
 import (
 	"encoding/json"
+	"fmt"
 )
+
+func LoginUserJson(userJson []byte) (bool, error) {
+	var userJsonMap map[string]interface{}
+
+	err := json.Unmarshal(userJson, &userJsonMap)
+	fmt.Println(userJsonMap)
+
+	user, _ := database.GetUserByUserName(userJsonMap["username"].(string))
+
+	passwordSalt := user.PasswordSalt
+	password := []byte(userJsonMap["password"].(string))
+	hashedPassword := user.HashedPassword
+	auth := CompareSaltAndPasswordToHash(passwordSalt, password, hashedPassword)
+	return auth, err
+}
 
 func PostUserJson(userJson []byte) error {
 	var userJsonMap map[string]interface{}
