@@ -36,7 +36,7 @@ Set env for postgres
 
 ```
 export ambition_dbname=ambition
-export ambition_usename=ambition
+export ambition_username=ambition
 export ambition_password=ambition
 
 ```
