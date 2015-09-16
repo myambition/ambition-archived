@@ -40,6 +40,15 @@ func (db DB) GetUserByUserName(userName string) (*User, error) {
 	return &reval, err
 }
 
+func (db DB) InsertSession(userId int, hashedToken string) error {
+	const query = `INSERT INTO sessions (user_id, hashed_token) VALUES ($1, $2)`
+
+	_, err := db.Exec(query, userId, hashedToken)
+
+	return err
+
+}
+
 // ----------------------------- Sets  ----------------------------- //
 func (db DB) GetSets() ([]Set, error) {
 	const query = `SELECT * FROM sets`
@@ -180,6 +189,23 @@ func (db DB) DropUserTable() error {
 
 	return err
 }
+
+func (db DB) CreateSessionTable() error {
+	const query = `CREATE TABLE sessions(id SERIAL PRIMARY KEY, user_id integer, hashed_token varchar(255))`
+
+	_, err := db.Exec(query)
+
+	return err
+}
+
+func (db DB) DropSessionTable() error {
+	const query = `DROP TABLE sessions`
+
+	_, err := db.Exec(query)
+
+	return err
+}
+
 func (db DB) CreateSetTable() error {
 	const query = `CREATE TABLE sets(id SERIAL PRIMARY KEY, set_name varchar(255))`
 
