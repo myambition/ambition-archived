@@ -10,27 +10,33 @@ import (
 	"time"
 )
 
-func CreateSaltAndHashedPassword(password []byte) (passwordSalt []byte, hashedPassword []byte) {
+// CreateSaltAndHashedPassword takes a password as a byte array
+// and returns a hashed version of the password and a password salt
+// that was generated and used in the hashing process
+func CreateSaltAndHashedPassword(password []byte) (passwordSalt []byte, hashedPassword []byte, error err) {
+	// Create password salt from the current time and a random integer
+	// Salts just need to be unique in case of a database breach.
+	// Current nanosecond + random 31bit int have a very small chance
+	// of ever having a collision
 	nano := time.Now().UnixNano()
 	rand.Seed(nano)
 	random := rand.Int31()
 	salt := strconv.Itoa(int(nano)) + strconv.Itoa(int(random))
-	fmt.Println(string(salt))
-	hash, _ := bcrypt.GenerateFromPassword([]byte(string(password)+salt), 10)
-	fmt.Println(string(password) + salt)
-	fmt.Println(hash)
-	return []byte(salt), hash
+
+	// Create password hash using bcrypt
+	hash, err := bcrypt.GenerateFromPassword([]byte(string(password)+salt), 10)
+
+	return []byte(salt), hash, err
 }
 
-func CompareSaltAndPasswordToHash(salt, password, hashedPassword []byte) bool {
+// CompareSaltAndPasswordToHash takes a salt, a hashedPassword, and a submitted password and
+// returns true if the submitted password was the original password saved
+func CompareSaltAndPasswordToHash(salt, hashedPassword, password []byte) bool {
+	// Combine sumbited password and salt
 	saltedPassword := []byte(string(password) + string(salt))
-	fmt.Println(string(saltedPassword))
-	fmt.Println("Why are the two hashes different but still pass?")
-	fmt.Println(string(hashedPassword))
-	hash, _ := bcrypt.GenerateFromPassword(saltedPassword, 10)
-	fmt.Println(string(hash))
+
+	// Use bcrypt to compare hashedPassword and saltedPassword
 	err := bcrypt.CompareHashAndPassword(hashedPassword, saltedPassword)
-	check(err)
 	return err == nil
 }
 

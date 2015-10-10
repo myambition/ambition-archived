@@ -16,7 +16,7 @@ func LoginUserJson(userJson []byte) (string, int, error) {
 	passwordSalt := user.PasswordSalt
 	password := []byte(userJsonMap["password"].(string))
 	hashedPassword := user.HashedPassword
-	auth := CompareSaltAndPasswordToHash(passwordSalt, password, hashedPassword)
+	auth := CompareSaltAndPasswordToHash(passwordSalt, hashedPassword, password)
 	if auth {
 		token, _ := GenerateRandomString(32)
 		database.InsertSession(user.Id, HashToken(token))
@@ -26,6 +26,7 @@ func LoginUserJson(userJson []byte) (string, int, error) {
 	return "", 0, err
 }
 
+// Creates a User in the database from json.
 func PostUserJson(userJson []byte) error {
 	var userJsonMap map[string]interface{}
 
@@ -35,7 +36,9 @@ func PostUserJson(userJson []byte) error {
 	password := userJsonMap["password"].(string)
 	user.UserName = userJsonMap["username"].(string)
 	user.Email = userJsonMap["email"].(string)
-	user.PasswordSalt, user.HashedPassword = CreateSaltAndHashedPassword([]byte(password))
+
+	// Create User salt and hashed password for storage and later authentication
+	user.PasswordSalt, user.HashedPassword, err = CreateSaltAndHashedPassword([]byte(password))
 
 	database.InsertUser(&user)
 
