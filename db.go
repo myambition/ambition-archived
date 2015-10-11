@@ -131,6 +131,14 @@ func (db DB) GetActionById(id int) (*Action, error) {
 	return &reval, err
 }
 
+func (db DB) GetActionByUserId(id int) (*Action, error) {
+	const query = `SELECT id, action_name, set_id, user_id FROM actions WHERE user_id = $1`
+	var reval Action
+	err := db.QueryRow(query, id).Scan(&reval.Id, &reval.ActionName, &reval.SetId, &reval.UserId)
+
+	return &reval, err
+}
+
 func (db DB) InsertAction(action *Action) error {
 	const query = `INSERT INTO actions (action_name, set_id) VALUES ($1, $2)`
 
@@ -239,7 +247,7 @@ func (db DB) DropSetTable() error {
 }
 
 func (db DB) CreateActionTable() error {
-	const query = `CREATE TABLE actions(id SERIAL PRIMARY KEY, action_name varchar(255), set_id integer)`
+	const query = `CREATE TABLE actions(id SERIAL PRIMARY KEY, action_name varchar(255), set_id integer, user_id integer)`
 
 	_, err := db.Exec(query)
 

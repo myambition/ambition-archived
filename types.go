@@ -23,6 +23,7 @@ type Action struct {
 	Id         int    `json:"id"`
 	ActionName string `json:"actionName"`
 	SetId      int    `json:"setId"`
+	UserId     int    `json:"userId"`
 }
 
 // TODO: Add metadata / extradata / data field. It can have any structure.
