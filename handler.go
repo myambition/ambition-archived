@@ -34,7 +34,7 @@ func PostUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 // Remove encoding/json, create passthrough methods in jsonHandler.go if needed
 
 func Actions(w http.ResponseWriter, r *http.Request, _ httprouter.Params, user *User) {
-	allActions, err := database.GetActions()
+	allActions, err := user.GetActions()
 	check(err)
 
 	actionJson, err := json.Marshal(allActions)
