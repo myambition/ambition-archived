@@ -3,7 +3,6 @@ package ambition
 import (
 	crand "crypto/rand"
 	"encoding/base64"
-	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"math/rand"
 	"strconv"
@@ -13,7 +12,7 @@ import (
 // CreateSaltAndHashedPassword takes a password as a byte array
 // and returns a hashed version of the password and a password salt
 // that was generated and used in the hashing process
-func CreateSaltAndHashedPassword(password []byte) (passwordSalt []byte, hashedPassword []byte, error err) {
+func CreateSaltAndHashedPassword(password []byte) ([]byte, []byte, error) {
 	// Create password salt from the current time and a random integer
 	// Salts just need to be unique in case of a database breach.
 	// Current nanosecond + random 31bit int have a very small chance

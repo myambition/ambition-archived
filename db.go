@@ -40,6 +40,15 @@ func (db DB) GetUserByUserName(userName string) (*User, error) {
 	return &reval, err
 }
 
+func (db DB) GetUserById(id int) (*User, error) {
+	const query = `SELECT username, email, password_salt, hashed_password FROM users WHERE username = $1`
+	var reval User
+
+	err := db.QueryRow(query, id).Scan(&reval.UserName, &reval.Email, &reval.PasswordSalt, &reval.HashedPassword)
+	reval.Id = id
+	return &reval, err
+}
+
 func (db DB) InsertSession(userId int, hashedToken string) error {
 	const query = `INSERT INTO sessions (user_id, hashed_token) VALUES ($1, $2)`
 
