@@ -16,7 +16,7 @@ func Login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	check(err)
 
 	token, userId, err := LoginUserJson(userJson)
-	fmt.Println(userId)
+
 	cookie := http.Cookie{Name: strconv.Itoa(userId), Value: token}
 	http.SetCookie(w, &cookie)
 }

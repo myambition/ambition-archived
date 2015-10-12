@@ -2,22 +2,23 @@ package ambition
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
+// LoginuserJson takes json with a username and a password key
+// unmarshals this json and then creates a session if the
+// pass authentication information is valid
 func LoginUserJson(userJson []byte) (string, int, error) {
 	var userJsonMap map[string]interface{}
 
 	err := json.Unmarshal(userJson, &userJsonMap)
-	fmt.Println(userJsonMap)
 
 	user, _ := database.GetUserByUserName(userJsonMap["username"].(string))
 
-	passwordSalt := user.PasswordSalt
 	password := []byte(userJsonMap["password"].(string))
-	hashedPassword := user.HashedPassword
-	auth := CompareSaltAndPasswordToHash(passwordSalt, hashedPassword, password)
-	if auth {
+
+	authed := CompareSaltAndPasswordToHash(user.PasswordSalt, user.HashedPassword, password)
+
+	if authed {
 		token, _ := GenerateRandomString(32)
 		database.InsertSession(user.Id, HashToken(token))
 		return token, user.Id, nil
