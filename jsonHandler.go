@@ -19,6 +19,7 @@ func LoginUserJson(userJson []byte) (string, int, error) {
 	authed := CompareSaltAndPasswordToHash(user.PasswordSalt, user.HashedPassword, password)
 
 	if authed {
+		database.DeleteSessionByUserId(user.Id)
 		token, _ := GenerateRandomString(32)
 		database.InsertSession(user.Id, HashToken(token))
 		return token, user.Id, nil

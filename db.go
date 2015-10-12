@@ -65,6 +65,14 @@ func (db DB) GetSessionKeyByUserId(userId int) (string, error) {
 	return reval, err
 }
 
+func (db DB) DeleteSessionByUserId(userId int) error {
+	const query = `DELETE FROM sessions WHERE user_id = $1`
+
+	_, err := db.Exec(query, userId)
+
+	return err
+}
+
 // ----------------------------- Sets  ----------------------------- //
 func (db DB) GetSets() ([]Set, error) {
 	const query = `SELECT * FROM sets`
