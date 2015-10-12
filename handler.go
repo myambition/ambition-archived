@@ -43,11 +43,11 @@ func Actions(w http.ResponseWriter, r *http.Request, _ httprouter.Params, user *
 	fmt.Fprintf(w, "%s", string(actionJson))
 }
 
-func ActionById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func ActionById(w http.ResponseWriter, r *http.Request, ps httprouter.Params, user *User) {
 	id, err := strconv.Atoi(ps.ByName("ActionId"))
 	check(err)
 
-	actionById, err := database.GetActionById(id)
+	actionById, err := user.GetAction(id)
 	check(err)
 
 	actionJson, err := json.Marshal(actionById)

@@ -131,12 +131,20 @@ func (db DB) GetActionById(id int) (*Action, error) {
 	return &reval, err
 }
 
-func (db DB) GetActionByUserId(id int) (*Action, error) {
+func (db DB) GetActionsByUserId(id int) ([]Action, error) {
 	const query = `SELECT id, action_name, set_id, user_id FROM actions WHERE user_id = $1`
-	var reval Action
-	err := db.QueryRow(query, id).Scan(&reval.Id, &reval.ActionName, &reval.SetId, &reval.UserId)
+	var reval []Action
 
-	return &reval, err
+	rows, err := db.Query(query, id)
+	defer rows.Close()
+	for rows.Next() {
+		var action Action
+		err := rows.Scan(&action.Id, &action.ActionName, &action.SetId, &action.UserId)
+		check(err)
+		reval = append(reval, action)
+	}
+
+	return reval, err
 }
 
 func (db DB) InsertAction(action *Action) error {
