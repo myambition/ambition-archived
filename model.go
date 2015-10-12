@@ -1,6 +1,8 @@
 package ambition
 
-import "errors"
+import (
+	"errors"
+)
 
 func (u User) GetActions() ([]Action, error) {
 	actions, err := database.GetActionsByUserId(u.Id)
@@ -13,4 +15,11 @@ func (u User) GetAction(actionId int) (*Action, error) {
 		return action, err
 	}
 	return nil, errors.New("Permission Denied")
+}
+
+func (a Action) CreateOccurrence(occurrence Occurrence) error {
+	occurrence.ActionId = a.Id
+
+	err := database.InsertOccurrence(&occurrence)
+	return err
 }

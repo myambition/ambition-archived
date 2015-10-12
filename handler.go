@@ -110,14 +110,19 @@ func Occurrences(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	//	fmt.Fprintf(w, "%s", string(occurrences_json))
 }
 
-func PostOccurrence(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func PostOccurrence(w http.ResponseWriter, r *http.Request, ps httprouter.Params, user *User) {
 	occurrenceJson, err := ioutil.ReadAll(r.Body)
 	check(err)
 
-	id, err := strconv.Atoi(ps.ByName("ActionId"))
+	var occurrence Occurrence
+	err = json.Unmarshal(occurrenceJson, &occurrence)
+
+	actionId, err := strconv.Atoi(ps.ByName("ActionId"))
 	check(err)
 
-	err = PostOccurrenceByActionIdJson(id, occurrenceJson)
+	action, err := user.GetAction(actionId)
+	action.CreateOccurrence(occurrence)
+
 	check(err)
 }
 
