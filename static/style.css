@@ -1,0 +1,16 @@
+ul {
+	list-style: none;
+	display: table;
+	width: 100%;
+	text-align: center;
+}
+li {
+	padding : 5px;
+}
+li:active {
+	background-color: #AAA;
+}
+#title {
+	background: red;
+	color: white;
+}

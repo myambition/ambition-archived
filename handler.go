@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
+	"html/template"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -11,7 +12,7 @@ import (
 
 type UserHandler func(http.ResponseWriter, *http.Request, httprouter.Params, *User)
 
-func Login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func AuthLogin(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	userJson, err := ioutil.ReadAll(r.Body)
 	check(err)
 
@@ -23,6 +24,13 @@ func Login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	http.SetCookie(w, &tokenCookie)
 }
 
+func LoginPage(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	p, err := ioutil.ReadFile("./html/login.html")
+	check(err)
+
+	fmt.Fprintf(w, string(p))
+}
+
 func PostUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	userJson, err := ioutil.ReadAll(r.Body)
@@ -30,6 +38,13 @@ func PostUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	err = PostUserJson(userJson)
 	check(err)
+}
+
+func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params, user *User) {
+	t, err := template.ParseFiles("./html/index.html")
+	actions, err := user.GetActions()
+	check(err)
+	t.Execute(w, actions)
 }
 
 // TODO:

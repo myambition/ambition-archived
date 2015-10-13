@@ -10,10 +10,13 @@ import (
 func CheckAuth(handle UserHandler) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		userIdCookie, err := r.Cookie("UserId")
+		if err != nil {
+			LoginPage(w, r, ps)
+			return
+		}
 		userId, err := strconv.Atoi(userIdCookie.Value)
 
 		token, err := r.Cookie("Token")
-		check(err)
 
 		dbHashedToken, _ := database.GetSessionKeyByUserId(userId)
 		if CompareHashAndToken(dbHashedToken, token.Value) {
