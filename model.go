@@ -17,7 +17,7 @@ func Login(username, password string) (u *User, token string, err error) {
 		return user, token, err
 	}
 
-	return nil, "", err
+	return nil, "", errors.New("Invalid username or password")
 }
 
 func (u User) GetActions() ([]Action, error) {

@@ -45,6 +45,10 @@ export ambition_password=ambition
 
 ### Setup
 
+`./cmd/main.go` must be run from the root of this repo. All paths are relative to the root of this repo
+
+`go run cmd/main.go`
+
 ```
 // Create tables
 $ ambition create

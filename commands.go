@@ -24,11 +24,11 @@ func dropTables(db DB) {
 func seedTables() {
 	//setJson, err := ioutil.ReadFile("../testdata/seed-data/sets-seed.json")
 	//check(err)
-	actionJson, err := ioutil.ReadFile("../testdata/seed-data/actions-seed.json")
+	actionJson, err := ioutil.ReadFile("./testdata/seed-data/actions-seed.json")
 	check(err)
-	occurrenceJson, err := ioutil.ReadFile("../testdata/seed-data/occurrences-seed.json")
+	occurrenceJson, err := ioutil.ReadFile("./testdata/seed-data/occurrences-seed.json")
 	check(err)
-	userJson, err := ioutil.ReadFile("../testdata/post-data/user.json")
+	userJson, err := ioutil.ReadFile("./testdata/post-data/user.json")
 	check(err)
 
 	//PostArrayOfSetsJson(setJson)

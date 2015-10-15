@@ -20,7 +20,12 @@ func AuthLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if r.Header.Get("Content-Type") == "application/x-www-form-urlencoded" {
 		var err error
 		user, token, err = Login(r.FormValue("username"), r.FormValue("password"))
-		check(err)
+		if err != nil {
+			// Page does not seem to refresh when I do http.StatusUnauthorized, need to look into that
+			http.Redirect(w, r, "/auth/login", http.StatusFound)
+			return
+		}
+
 		userId = user.Id
 	} else {
 		fmt.Println("json")
