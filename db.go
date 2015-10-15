@@ -131,9 +131,9 @@ func (db DB) GetActions() ([]Action, error) {
 }
 
 func (db DB) GetActionById(id int) (*Action, error) {
-	const query = `SELECT action_name, set_id FROM actions WHERE id = $1`
+	const query = `SELECT action_name, set_id, user_id FROM actions WHERE id = $1`
 	var reval Action
-	err := db.QueryRow(query, id).Scan(&reval.ActionName, &reval.SetId)
+	err := db.QueryRow(query, id).Scan(&reval.ActionName, &reval.SetId, &reval.UserId)
 	reval.Id = id
 
 	return &reval, err

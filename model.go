@@ -2,7 +2,6 @@ package ambition
 
 import (
 	"errors"
-	"fmt"
 )
 
 func Login(username, password string) (u *User, token string, err error) {
