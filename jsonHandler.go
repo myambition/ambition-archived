@@ -12,20 +12,10 @@ func LoginUserJson(userJson []byte) (string, int, error) {
 
 	err := json.Unmarshal(userJson, &userJsonMap)
 
-	user, _ := database.GetUserByUserName(userJsonMap["username"].(string))
+	user, token, err := Login(userJsonMap["username"].(string), userJsonMap["password"].(string))
 
-	password := []byte(userJsonMap["password"].(string))
+	return token, user.Id, err
 
-	authed := CompareSaltAndPasswordToHash(user.PasswordSalt, user.HashedPassword, password)
-
-	if authed {
-		database.DeleteSessionByUserId(user.Id)
-		token, _ := GenerateRandomString(32)
-		database.InsertSession(user.Id, HashToken(token))
-		return token, user.Id, nil
-	}
-
-	return "", 0, err
 }
 
 // Creates a User in the database from json.

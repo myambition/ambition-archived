@@ -75,3 +75,5 @@ func CompareHashAndToken(hash string, token string) bool {
 	check(err)
 	return err == nil
 }
+
+func LoginUser(username string, password string) {}

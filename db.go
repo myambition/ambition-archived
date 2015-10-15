@@ -41,7 +41,7 @@ func (db DB) GetUserByUserName(userName string) (*User, error) {
 }
 
 func (db DB) GetUserById(id int) (*User, error) {
-	const query = `SELECT username, email, password_salt, hashed_password FROM users WHERE username = $1`
+	const query = `SELECT username, email, password_salt, hashed_password FROM users WHERE id = $1`
 	var reval User
 
 	err := db.QueryRow(query, id).Scan(&reval.UserName, &reval.Email, &reval.PasswordSalt, &reval.HashedPassword)
@@ -156,9 +156,9 @@ func (db DB) GetActionsByUserId(id int) ([]Action, error) {
 }
 
 func (db DB) InsertAction(action *Action) error {
-	const query = `INSERT INTO actions (action_name, set_id) VALUES ($1, $2)`
+	const query = `INSERT INTO actions (action_name, set_id, user_id) VALUES ($1, $2, $3)`
 
-	_, err := db.Exec(query, action.ActionName, action.SetId)
+	_, err := db.Exec(query, action.ActionName, action.SetId, action.UserId)
 
 	return err
 }

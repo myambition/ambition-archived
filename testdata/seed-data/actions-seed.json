@@ -2,11 +2,11 @@
 	{
 		"ActionName":"Brush Teeth",
 		"SetId" : 1,
-		"UserId" : 1
+		"userId" : 1
 	},
 	{
 		"ActionName":"Fluoride Tray",
 		"SetId" : 1,
-		"UserId" : 1
+		"userId" : 1
 	}
 ]

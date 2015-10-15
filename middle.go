@@ -1,6 +1,7 @@
 package ambition
 
 import (
+	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"strconv"
@@ -10,7 +11,9 @@ import (
 func CheckAuth(handle UserHandler) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		userIdCookie, err := r.Cookie("UserId")
+
 		if err != nil {
+			fmt.Print("Oh no, no cookie")
 			LoginPage(w, r, ps)
 			return
 		}

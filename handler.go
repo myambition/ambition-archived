@@ -12,16 +12,31 @@ import (
 
 type UserHandler func(http.ResponseWriter, *http.Request, httprouter.Params, *User)
 
-func AuthLogin(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	userJson, err := ioutil.ReadAll(r.Body)
-	check(err)
+func AuthLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var userId int
+	var token string
+	var user *User
 
-	token, userId, err := LoginUserJson(userJson)
+	if r.Header.Get("Content-Type") == "application/x-www-form-urlencoded" {
+		var err error
+		user, token, err = Login(r.FormValue("username"), r.FormValue("password"))
+		check(err)
+		userId = user.Id
+	} else {
+		fmt.Println("json")
+		userJson, err := ioutil.ReadAll(r.Body)
+		check(err)
 
-	usernameCookie := http.Cookie{Name: "UserId", Value: strconv.Itoa(userId)}
-	tokenCookie := http.Cookie{Name: "Token", Value: token}
+		token, userId, err = LoginUserJson(userJson)
+		user, err = database.GetUserById(userId)
+	}
+
+	usernameCookie := http.Cookie{Name: "UserId", Value: strconv.Itoa(userId), Path: "/"}
+	tokenCookie := http.Cookie{Name: "Token", Value: token, Path: "/"}
 	http.SetCookie(w, &usernameCookie)
 	http.SetCookie(w, &tokenCookie)
+	http.Redirect(w, r, "/", http.StatusFound)
+
 }
 
 func LoginPage(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -32,7 +47,6 @@ func LoginPage(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func PostUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
 	userJson, err := ioutil.ReadAll(r.Body)
 	check(err)
 
@@ -136,6 +150,7 @@ func PostOccurrence(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 	check(err)
 
 	action, err := user.GetAction(actionId)
+	check(err)
 	action.CreateOccurrence(occurrence)
 
 	check(err)

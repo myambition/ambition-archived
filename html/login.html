@@ -12,7 +12,11 @@
 	<div class="list-group" id="main">
 		<a class="list-group-item" id="title">Ambition</a>
 
-		<a class="list-group-item" >Login<input></input></a>
+		<form action="/auth/login" method="POST">
+		<a class="list-group-item" >Username <input name="username"></input></a>
+		<a class="list-group-item" >Password <input name="password"></input></a>
+		<a class="list-group-item" ><input type="submit"></input></a>
+		</form>
 	</div>
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
