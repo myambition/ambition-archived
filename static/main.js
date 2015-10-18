@@ -1,4 +1,4 @@
-var serverRoot = "http://localhost:3000"
+//var serverRoot = "http://localhost:3000"
 
 $('.list-group-item').on({
         'mousedown' : function() { activate(this); },
@@ -13,7 +13,7 @@ function activate(that) {
     var data = { time: new Date().toISOString() };
     $.ajax({
         type: "POST",
-        url: serverRoot + "/actions/" + $(that).attr("dbid"),
+        url: "/actions/" + $(that).attr("dbid"),
         data: JSON.stringify(data),
         sucess: function () { alert("woo");}
     })
