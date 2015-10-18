@@ -19,13 +19,17 @@ func CheckAuth(handle UserHandler) httprouter.Handle {
 
 		token, err := r.Cookie("Token")
 
-		dbHashedToken, _ := database.GetSessionKeyByUserId(userId)
-		if CompareHashAndToken(dbHashedToken, token.Value) {
-			user, err := database.GetUserById(userId)
-			check(err)
-			handle(w, r, ps, user)
-		} else {
-			w.WriteHeader(401)
+		dbHashedTokens, _ := database.GetSessionKeysByUserId(userId)
+		for _, key := range dbHashedTokens {
+			if CompareHashAndToken(key, token.Value) {
+				user, err := database.GetUserById(userId)
+				check(err)
+				handle(w, r, ps, user)
+				return
+			}
 		}
+
+		LoginPage(w, r, ps)
+		return
 	}
 }
