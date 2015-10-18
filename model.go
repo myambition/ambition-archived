@@ -11,7 +11,6 @@ func Login(username, password string) (u *User, token string, err error) {
 	authed := CompareSaltAndPasswordToHash(user.PasswordSalt, user.HashedPassword, []byte(password))
 
 	if authed {
-		database.DeleteSessionByUserId(user.Id)
 		token, _ := GenerateRandomString(32)
 		database.InsertSession(user.Id, HashToken(token))
 		return user, token, err

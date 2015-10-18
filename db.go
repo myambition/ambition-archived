@@ -57,11 +57,18 @@ func (db DB) InsertSession(userId int, hashedToken string) error {
 	return err
 }
 
-func (db DB) GetSessionKeyByUserId(userId int) (string, error) {
-	const query = `SELECT hashed_token FROM sessions WHERE user_id = $1`
+func (db DB) GetSessionKeysByUserId(userId int) ([]string, error) {
+	const query = `SELECT hashed_token FROM sessions, users WHERE user_id = $1 and users.id = sessions.user_id`
+	var reval []string
 
-	var reval string
-	err := db.QueryRow(query, userId).Scan(&reval)
+	rows, err := db.Query(query, userId)
+	defer rows.Close()
+	for rows.Next() {
+		var key string
+		err := rows.Scan(&key)
+		check(err)
+		reval = append(reval, key)
+	}
 	return reval, err
 }
 
