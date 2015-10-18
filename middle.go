@@ -25,7 +25,8 @@ func CheckAuth(handle UserHandler) httprouter.Handle {
 			check(err)
 			handle(w, r, ps, user)
 		} else {
-			w.WriteHeader(401)
+			LoginPage(w, r, ps)
+			return
 		}
 	}
 }

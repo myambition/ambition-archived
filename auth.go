@@ -72,7 +72,6 @@ func HashToken(token string) string {
 func CompareHashAndToken(hash string, token string) bool {
 
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(token))
-	check(err)
 	return err == nil
 }
 
