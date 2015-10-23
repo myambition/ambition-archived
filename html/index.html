@@ -12,7 +12,7 @@
 	<div class="list-group" id="main">
 		<a class="list-group-item" id="title">Ambition</a>
 		{{range $index, $element := .}}
-		<a class="list-group-item" dbid="{{.Id}}">{{.ActionName}}</a>
+		<a class="list-group-item action" dbid="{{.Id}}">{{.ActionName}}</a>
 		{{end}}
 	</div>
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -20,6 +20,7 @@
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
+	<script src="static/jQuery.fastClick.js"></script>
 	<script src="static/main.js"></script>
 </body>
 </html>
