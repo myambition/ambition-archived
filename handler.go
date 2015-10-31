@@ -27,6 +27,7 @@ func AuthLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		}
 
 		userId = user.Id
+
 	} else {
 		fmt.Println("json")
 		userJson, err := ioutil.ReadAll(r.Body)
@@ -56,7 +57,9 @@ func PostUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	check(err)
 
 	err = PostUserJson(userJson)
-	check(err)
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+	}
 }
 
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params, user *User) {

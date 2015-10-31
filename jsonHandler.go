@@ -2,6 +2,7 @@ package ambition
 
 import (
 	"encoding/json"
+	"errors"
 )
 
 // LoginuserJson takes json with a username and a password key
@@ -21,7 +22,6 @@ func LoginUserJson(userJson []byte) (string, int, error) {
 // Creates a User in the database from json.
 func PostUserJson(userJson []byte) error {
 	var userJsonMap map[string]interface{}
-
 	err := json.Unmarshal(userJson, &userJsonMap)
 
 	var user User
@@ -29,10 +29,15 @@ func PostUserJson(userJson []byte) error {
 	user.UserName = userJsonMap["username"].(string)
 	user.Email = userJsonMap["email"].(string)
 
-	// Create User salt and hashed password for storage and later authentication
-	user.PasswordSalt, user.HashedPassword, err = CreateSaltAndHashedPassword([]byte(password))
+	_, err = database.GetUserByUserName(user.UserName)
+	if err != nil {
+		// Create User salt and hashed password for storage and later authentication
+		user.PasswordSalt, user.HashedPassword, err = CreateSaltAndHashedPassword([]byte(password))
 
-	database.InsertUser(&user)
+		database.InsertUser(&user)
+	} else {
+		err = errors.New("Username exists")
+	}
 
 	return err
 }
