@@ -33,6 +33,13 @@ func (u User) GetAction(actionId int) (*Action, error) {
 	return nil, errors.New("Permission Denied")
 }
 
+func (u User) CreateAction(action Action) error {
+	action.UserId = u.Id
+
+	err := database.InsertAction(&action)
+	return err
+}
+
 func (a Action) CreateOccurrence(occurrence Occurrence) error {
 	occurrence.ActionId = a.Id
 

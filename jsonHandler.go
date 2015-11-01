@@ -52,16 +52,6 @@ func PostOccurrenceByActionIdJson(ActionId int, occurrenceJson []byte) error {
 	return err
 }
 
-func PostActionBySetIdJson(SetId int, actionJson []byte) error {
-	var action Action
-	err := json.Unmarshal(actionJson, &action)
-
-	action.SetId = SetId
-	database.InsertAction(&action)
-
-	return err
-}
-
 func PostArrayOfSetsJson(setJson []byte) error {
 	var sets []Set
 	json.Unmarshal(setJson, &sets)

@@ -22,6 +22,7 @@ func AddRoutes(router *httprouter.Router) {
 	router.POST("/auth/login", AuthLogin)
 
 	router.POST("/actions/:ActionId", CheckAuth(PostOccurrence))
+	router.POST("/actions/", CheckAuth(PostAction))
 
 	// TODO:
 	// router.GET("/sets", sets)

@@ -95,15 +95,14 @@ func ActionById(w http.ResponseWriter, r *http.Request, ps httprouter.Params, us
 	fmt.Fprintf(w, "%s", string(actionJson))
 }
 
-func PostAction(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func PostAction(w http.ResponseWriter, r *http.Request, ps httprouter.Params, user *User) {
 	actionJson, err := ioutil.ReadAll(r.Body)
 	check(err)
 
-	id, err := strconv.Atoi(ps.ByName("SetId"))
-	check(err)
+	var action Action
+	err = json.Unmarshal(actionJson, &action)
 
-	err = PostActionBySetIdJson(id, actionJson)
-	check(err)
+	err = user.CreateAction(action)
 }
 
 // TODO:
