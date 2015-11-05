@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type UserHandler func(http.ResponseWriter, *http.Request, httprouter.Params, *User)
@@ -37,8 +38,8 @@ func AuthLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		user, err = database.GetUserById(userId)
 	}
 
-	usernameCookie := http.Cookie{Name: "UserId", Value: strconv.Itoa(userId), Path: "/"}
-	tokenCookie := http.Cookie{Name: "Token", Value: token, Path: "/"}
+	usernameCookie := http.Cookie{Name: "UserId", Value: strconv.Itoa(userId), Path: "/", Expires: time.Now().AddDate(0, 1, 0)}
+	tokenCookie := http.Cookie{Name: "Token", Value: token, Path: "/", Expires: time.Now().AddDate(0, 1, 0)}
 	http.SetCookie(w, &usernameCookie)
 	http.SetCookie(w, &tokenCookie)
 	http.Redirect(w, r, "/", http.StatusFound)
