@@ -2,11 +2,26 @@ package ambition
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
+	"os/exec"
 )
 
+// This function runs the command
+// $ docker run -e POSTGRES_PASSWORD=ambition -e POSTGRES_USER=ambition -p 5432:5432 -d postgres
+// which runs the latest postgres image linking port 5432 and setting the params
+// This function should eventually be populated by some kind of config
+// I am thinking a json file I open and univerally parse
+func initDockerPostgres() {
+	out, err := exec.Command("docker", "run", "-e", "POSTGRES_PASSWORD=ambition", "-e", "POSTGRES_USER=ambition", "-p", "5432:5432", "-d", "postgres").Output()
+	fmt.Printf("%s", err)
+	fmt.Printf("%s", out)
+
+}
+
 func createTables(db DB) {
-	db.CreateUserTable()
+	err := db.CreateUserTable()
+	fmt.Print(err)
 	db.CreateSessionTable()
 	db.CreateSetTable()
 	db.CreateActionTable()
@@ -39,6 +54,8 @@ func seedTables() {
 
 func CallCommand(command string) error {
 	switch command {
+	case "initDockerPostgres":
+		initDockerPostgres()
 	case "seed":
 		seedTables()
 	case "create":

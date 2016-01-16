@@ -18,7 +18,7 @@ var dbname = os.Getenv("ambition_dbname")
 var user = os.Getenv("ambition_username")
 var password = os.Getenv("ambition_password")
 
-var tempdb, _ = sql.Open("postgres", fmt.Sprintf("dbname=%s user=%s password=%s", dbname, user, password))
+var tempdb, _ = sql.Open("postgres", fmt.Sprintf("postgres://%s:%s@localhost:%s/%s?sslmode=disable", user, password, "5432", dbname))
 
 // Create a database type to extend
 var database = DB{tempdb}
