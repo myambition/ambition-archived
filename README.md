@@ -4,11 +4,17 @@ Action tracking
 
 ## Setup
 
-```
-$ go get github.com/adamryman/ambition
 
-$ source ${project_root}/ambition.env
-```
+### 1. Download
+`$ go get github.com/myambition/ambition`
+
+### 3. Setup Config
+Edit config.json for database settings and server port.
+
+### 2. Get static files with bower
+`$ cd static`
+`$ bower install`
+
 
 ### Setup Postgresql
 
@@ -30,15 +36,6 @@ $ psql
 $ # ALTER USER ambition PASSWORD ‘ambition';
 
 $ exit
-```
-
-Set env for postgres
-
-```
-export ambition_dbname=ambition
-export ambition_username=ambition
-export ambition_password=ambition
-
 ```
 
 ## Usage

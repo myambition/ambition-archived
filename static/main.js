@@ -1,24 +1,21 @@
 //var serverRoot = "http://localhost:3000"
 
-$('.list-group-item').on({
-        'mousedown' : function() { activate(this); },
-        'touchstart' : function() { activate(this); },
-        'mouseup' : function() { deactivate(this); },
-        'touchend' : function() { deactivate(this); }
-});
+$('.action').fastClick(
+    function (that) {
+        that = that.currentTarget;
+        $(that).addClass('active');
+        test = that;
+        var data = { time: new Date().toISOString() };
+        $.ajax({
+            type: "POST",
+            url: "/actions/" + $(that).attr("dbid"),
+            data: JSON.stringify(data),
+            success: function () { console.log("woo");},
+            error: function(e) { console.log("noooooo: ", e);}
+        })
+        setTimeout(function(){
+            $(".action").removeClass("active")
+        }, 120)
 
-function activate(that) {
-    $('#main').find('.active').removeClass('active');
-    $(that).addClass('active');
-    var data = { time: new Date().toISOString() };
-    $.ajax({
-        type: "POST",
-        url: "/actions/" + $(that).attr("dbid"),
-        data: JSON.stringify(data),
-        sucess: function () { alert("woo");}
-    })
-}
-
-function deactivate(that) {
-    $(that).removeClass('active');
-}
+    }
+);

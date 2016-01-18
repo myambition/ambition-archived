@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type UserHandler func(http.ResponseWriter, *http.Request, httprouter.Params, *User)
@@ -27,6 +28,7 @@ func AuthLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		}
 
 		userId = user.Id
+
 	} else {
 		fmt.Println("json")
 		userJson, err := ioutil.ReadAll(r.Body)
@@ -36,8 +38,8 @@ func AuthLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		user, err = database.GetUserById(userId)
 	}
 
-	usernameCookie := http.Cookie{Name: "UserId", Value: strconv.Itoa(userId), Path: "/"}
-	tokenCookie := http.Cookie{Name: "Token", Value: token, Path: "/"}
+	usernameCookie := http.Cookie{Name: "UserId", Value: strconv.Itoa(userId), Path: "/", Expires: time.Now().AddDate(0, 1, 0)}
+	tokenCookie := http.Cookie{Name: "Token", Value: token, Path: "/", Expires: time.Now().AddDate(0, 1, 0)}
 	http.SetCookie(w, &usernameCookie)
 	http.SetCookie(w, &tokenCookie)
 	http.Redirect(w, r, "/", http.StatusFound)
@@ -56,7 +58,9 @@ func PostUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	check(err)
 
 	err = PostUserJson(userJson)
-	check(err)
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+	}
 }
 
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params, user *User) {
@@ -92,15 +96,14 @@ func ActionById(w http.ResponseWriter, r *http.Request, ps httprouter.Params, us
 	fmt.Fprintf(w, "%s", string(actionJson))
 }
 
-func PostAction(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func PostAction(w http.ResponseWriter, r *http.Request, ps httprouter.Params, user *User) {
 	actionJson, err := ioutil.ReadAll(r.Body)
 	check(err)
 
-	id, err := strconv.Atoi(ps.ByName("SetId"))
-	check(err)
+	var action Action
+	err = json.Unmarshal(actionJson, &action)
 
-	err = PostActionBySetIdJson(id, actionJson)
-	check(err)
+	err = user.CreateAction(action)
 }
 
 // TODO:
