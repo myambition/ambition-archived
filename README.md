@@ -7,7 +7,8 @@ Action tracking
 ```
 $ go get github.com/adamryman/ambition
 
-$ source ${project_root}/ambition.env
+Edit config.json for database settings and server port.
+
 ```
 
 ### Setup Postgresql
@@ -30,15 +31,6 @@ $ psql
 $ # ALTER USER ambition PASSWORD ‘ambition';
 
 $ exit
-```
-
-Set env for postgres
-
-```
-export ambition_dbname=ambition
-export ambition_username=ambition
-export ambition_password=ambition
-
 ```
 
 ## Usage
