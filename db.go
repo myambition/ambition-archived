@@ -23,6 +23,63 @@ var tempdb, _ = sql.Open("postgres", fmt.Sprintf("dbname=%s user=%s password=%s"
 // Create a database type to extend
 var database = DB{tempdb}
 
+func (db DB) InsertUser(user *User) error {
+	const query = `INSERT INTO users (username, email, password_salt, hashed_password) VALUES ($1,$2,$3,$4)`
+
+	_, err := db.Exec(query, user.UserName, user.Email, user.PasswordSalt, user.HashedPassword)
+
+	return err
+}
+
+func (db DB) GetUserByUserName(userName string) (*User, error) {
+	const query = `SELECT id, email, password_salt, hashed_password FROM users WHERE username = $1`
+	var reval User
+
+	err := db.QueryRow(query, userName).Scan(&reval.Id, &reval.Email, &reval.PasswordSalt, &reval.HashedPassword)
+	reval.UserName = userName
+	return &reval, err
+}
+
+func (db DB) GetUserById(id int) (*User, error) {
+	const query = `SELECT username, email, password_salt, hashed_password FROM users WHERE id = $1`
+	var reval User
+
+	err := db.QueryRow(query, id).Scan(&reval.UserName, &reval.Email, &reval.PasswordSalt, &reval.HashedPassword)
+	reval.Id = id
+	return &reval, err
+}
+
+func (db DB) InsertSession(userId int, hashedToken string) error {
+	const query = `INSERT INTO sessions (user_id, hashed_token) VALUES ($1, $2)`
+
+	_, err := db.Exec(query, userId, hashedToken)
+
+	return err
+}
+
+func (db DB) GetSessionKeysByUserId(userId int) ([]string, error) {
+	const query = `SELECT hashed_token FROM sessions, users WHERE user_id = $1 and users.id = sessions.user_id`
+	var reval []string
+
+	rows, err := db.Query(query, userId)
+	defer rows.Close()
+	for rows.Next() {
+		var key string
+		err := rows.Scan(&key)
+		check(err)
+		reval = append(reval, key)
+	}
+	return reval, err
+}
+
+func (db DB) DeleteSessionByUserId(userId int) error {
+	const query = `DELETE FROM sessions WHERE user_id = $1`
+
+	_, err := db.Exec(query, userId)
+
+	return err
+}
+
 // ----------------------------- Sets  ----------------------------- //
 func (db DB) GetSets() ([]Set, error) {
 	const query = `SELECT * FROM sets`
@@ -81,18 +138,34 @@ func (db DB) GetActions() ([]Action, error) {
 }
 
 func (db DB) GetActionById(id int) (*Action, error) {
-	const query = `SELECT action_name, set_id FROM actions WHERE id = $1`
+	const query = `SELECT action_name, set_id, user_id FROM actions WHERE id = $1`
 	var reval Action
-	err := db.QueryRow(query, id).Scan(&reval.ActionName, &reval.SetId)
+	err := db.QueryRow(query, id).Scan(&reval.ActionName, &reval.SetId, &reval.UserId)
 	reval.Id = id
 
 	return &reval, err
 }
 
-func (db DB) InsertAction(action *Action) error {
-	const query = `INSERT INTO actions (action_name, set_id) VALUES ($1, $2)`
+func (db DB) GetActionsByUserId(id int) ([]Action, error) {
+	const query = `SELECT id, action_name, set_id, user_id FROM actions WHERE user_id = $1`
+	var reval []Action
 
-	_, err := db.Exec(query, action.ActionName, action.SetId)
+	rows, err := db.Query(query, id)
+	defer rows.Close()
+	for rows.Next() {
+		var action Action
+		err := rows.Scan(&action.Id, &action.ActionName, &action.SetId, &action.UserId)
+		check(err)
+		reval = append(reval, action)
+	}
+
+	return reval, err
+}
+
+func (db DB) InsertAction(action *Action) error {
+	const query = `INSERT INTO actions (action_name, set_id, user_id) VALUES ($1, $2, $3)`
+
+	_, err := db.Exec(query, action.ActionName, action.SetId, action.UserId)
 
 	return err
 }
@@ -148,6 +221,38 @@ func (db DB) DeleteOccurrenceById(occurrenceId int) error {
 
 // ------------ Table Creation and Dropping -------------------
 
+func (db DB) CreateUserTable() error {
+	const query = `CREATE TABLE users(id SERIAL PRIMARY KEY, username varchar(255), email varchar(255), password_salt varchar(30), hashed_password varchar(255))`
+
+	_, err := db.Exec(query)
+
+	return err
+}
+
+func (db DB) DropUserTable() error {
+	const query = `DROP TABLE users`
+
+	_, err := db.Exec(query)
+
+	return err
+}
+
+func (db DB) CreateSessionTable() error {
+	const query = `CREATE TABLE sessions(id SERIAL PRIMARY KEY, user_id integer, hashed_token varchar(255))`
+
+	_, err := db.Exec(query)
+
+	return err
+}
+
+func (db DB) DropSessionTable() error {
+	const query = `DROP TABLE sessions`
+
+	_, err := db.Exec(query)
+
+	return err
+}
+
 func (db DB) CreateSetTable() error {
 	const query = `CREATE TABLE sets(id SERIAL PRIMARY KEY, set_name varchar(255))`
 
@@ -165,7 +270,7 @@ func (db DB) DropSetTable() error {
 }
 
 func (db DB) CreateActionTable() error {
-	const query = `CREATE TABLE actions(id SERIAL PRIMARY KEY, action_name varchar(255), set_id integer)`
+	const query = `CREATE TABLE actions(id SERIAL PRIMARY KEY, action_name varchar(255), set_id integer, user_id integer)`
 
 	_, err := db.Exec(query)
 

@@ -6,28 +6,35 @@ import (
 )
 
 func createTables(db DB) {
+	db.CreateUserTable()
+	db.CreateSessionTable()
 	db.CreateSetTable()
 	db.CreateActionTable()
 	db.CreateOccurrenceTable()
 }
 
 func dropTables(db DB) {
+	db.DropUserTable()
+	db.DropSessionTable()
 	db.DropSetTable()
 	db.DropActionTable()
 	db.DropOccurrenceTable()
 }
 
 func seedTables() {
-	setJson, err := ioutil.ReadFile("../testdata/seed-data/sets-seed.json")
+	//setJson, err := ioutil.ReadFile("../testdata/seed-data/sets-seed.json")
+	//check(err)
+	actionJson, err := ioutil.ReadFile("./testdata/seed-data/actions-seed.json")
 	check(err)
-	actionJson, err := ioutil.ReadFile("../testdata/seed-data/actions-seed.json")
+	occurrenceJson, err := ioutil.ReadFile("./testdata/seed-data/occurrences-seed.json")
 	check(err)
-	occurrenceJson, err := ioutil.ReadFile("../testdata/seed-data/occurrences-seed.json")
+	userJson, err := ioutil.ReadFile("./testdata/post-data/user.json")
 	check(err)
 
-	PostArrayOfSetsJson(setJson)
+	//PostArrayOfSetsJson(setJson)
 	PostArrayOfActionsJson(actionJson)
 	PostArrayOfOccurrencesJson(occurrenceJson)
+	PostUserJson(userJson)
 }
 
 func CallCommand(command string) error {

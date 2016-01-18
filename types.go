@@ -5,9 +5,11 @@ import (
 )
 
 type User struct {
-	Id       int    `json:"id"`
-	UserName string `json:"username"`
-	Email    string `json:"email"`
+	Id             int    `json:"id"`
+	UserName       string `json:"username"`
+	Email          string `json:"email"`
+	HashedPassword []byte
+	PasswordSalt   []byte
 }
 
 type Set struct {
@@ -21,6 +23,7 @@ type Action struct {
 	Id         int    `json:"id"`
 	ActionName string `json:"actionName"`
 	SetId      int    `json:"setId"`
+	UserId     int    `json:"userId"`
 }
 
 // TODO: Add metadata / extradata / data field. It can have any structure.

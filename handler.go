@@ -4,16 +4,73 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
+	"html/template"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 )
 
+type UserHandler func(http.ResponseWriter, *http.Request, httprouter.Params, *User)
+
+func AuthLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var userId int
+	var token string
+	var user *User
+
+	if r.Header.Get("Content-Type") == "application/x-www-form-urlencoded" {
+		var err error
+		user, token, err = Login(r.FormValue("username"), r.FormValue("password"))
+		if err != nil {
+			// Page does not seem to refresh when I do http.StatusUnauthorized, need to look into that
+			http.Redirect(w, r, "/auth/login", http.StatusFound)
+			return
+		}
+
+		userId = user.Id
+	} else {
+		fmt.Println("json")
+		userJson, err := ioutil.ReadAll(r.Body)
+		check(err)
+
+		token, userId, err = LoginUserJson(userJson)
+		user, err = database.GetUserById(userId)
+	}
+
+	usernameCookie := http.Cookie{Name: "UserId", Value: strconv.Itoa(userId), Path: "/"}
+	tokenCookie := http.Cookie{Name: "Token", Value: token, Path: "/"}
+	http.SetCookie(w, &usernameCookie)
+	http.SetCookie(w, &tokenCookie)
+	http.Redirect(w, r, "/", http.StatusFound)
+
+}
+
+func LoginPage(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	p, err := ioutil.ReadFile("./html/login.html")
+	check(err)
+
+	fmt.Fprintf(w, string(p))
+}
+
+func PostUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	userJson, err := ioutil.ReadAll(r.Body)
+	check(err)
+
+	err = PostUserJson(userJson)
+	check(err)
+}
+
+func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params, user *User) {
+	t, err := template.ParseFiles("./html/index.html")
+	actions, err := user.GetActions()
+	check(err)
+	t.Execute(w, actions)
+}
+
 // TODO:
 // Remove encoding/json, create passthrough methods in jsonHandler.go if needed
 
-func Actions(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	allActions, err := database.GetActions()
+func Actions(w http.ResponseWriter, r *http.Request, _ httprouter.Params, user *User) {
+	allActions, err := user.GetActions()
 	check(err)
 
 	actionJson, err := json.Marshal(allActions)
@@ -22,11 +79,11 @@ func Actions(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Fprintf(w, "%s", string(actionJson))
 }
 
-func ActionById(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func ActionById(w http.ResponseWriter, r *http.Request, ps httprouter.Params, user *User) {
 	id, err := strconv.Atoi(ps.ByName("ActionId"))
 	check(err)
 
-	actionById, err := database.GetActionById(id)
+	actionById, err := user.GetAction(id)
 	check(err)
 
 	actionJson, err := json.Marshal(actionById)
@@ -87,14 +144,20 @@ func Occurrences(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	//	fmt.Fprintf(w, "%s", string(occurrences_json))
 }
 
-func PostOccurrence(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func PostOccurrence(w http.ResponseWriter, r *http.Request, ps httprouter.Params, user *User) {
 	occurrenceJson, err := ioutil.ReadAll(r.Body)
 	check(err)
 
-	id, err := strconv.Atoi(ps.ByName("ActionId"))
+	var occurrence Occurrence
+	err = json.Unmarshal(occurrenceJson, &occurrence)
+
+	actionId, err := strconv.Atoi(ps.ByName("ActionId"))
 	check(err)
 
-	err = PostOccurrenceByActionIdJson(id, occurrenceJson)
+	action, err := user.GetAction(actionId)
+	check(err)
+	action.CreateOccurrence(occurrence)
+
 	check(err)
 }
 

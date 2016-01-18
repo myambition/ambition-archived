@@ -5,15 +5,15 @@ Action tracking
 ## Setup
 
 ```
-go get github.com/adamryman/ambition
+$ go get github.com/adamryman/ambition
 
-export ambition_port=port
+$ source ${project_root}/ambition.env
 ```
 
 ### Setup Postgresql
 
 ```
-$ sudo apt-get install postgres
+$ sudo apt-get install postgresql
 
 # set password to be ambition for it to be easy
 $ sudo adduser ambition
@@ -44,6 +44,10 @@ export ambition_password=ambition
 ## Usage
 
 ### Setup
+
+`./cmd/main.go` must be run from the root of this repo. All paths are relative to the root of this repo
+
+`go run cmd/main.go`
 
 ```
 // Create tables
