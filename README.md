@@ -4,6 +4,7 @@ Action tracking
 
 ## Setup
 
+Go and docker or postgres are required
 
 ### 1. Download
 `$ go get github.com/myambition/ambition`
@@ -15,8 +16,24 @@ Edit config.json for database settings and server port.
 `$ cd static`
 `$ bower install`
 
+### 3. Compile
 
-### Setup Postgresql
+`$ go run cmd/main.go`
+
+### 4. Setup Postgresql using docker
+
+`$ go run cmd/main.go dockerDB`
+
+This creates a docker container running the postgresql image. It is port forwarded to localhost:5432 with username:ambition password:ambition dbname:ambition and ssl:disabled.
+
+To stop the docker container, refer to the docker documentation. This is provided as a convenient command to launch a clean database. Note that the data in this database will only last as long as the container does. Refer to the postgres docker image on dockerhub for additional details.
+
+### 5. Seeding the database
+
+`$ go run cmd/main.go create`
+`$ go run cmd/main.go seed`
+
+### (Optional install of docker) Setup Postgresql
 
 ```
 $ sudo apt-get install postgresql
@@ -38,28 +55,6 @@ $ # ALTER USER ambition PASSWORD ‘ambition';
 $ exit
 ```
 
-## Usage
-
-### Setup
-
-`./cmd/main.go` must be run from the root of this repo. All paths are relative to the root of this repo
-
-`go run cmd/main.go`
-
-```
-// Create tables
-$ ambition create
-// Seed tables with example data from json
-$ ambition seed
-// Drop tables
-$ ambition drop
-```
-
-### Webserver
-
-```
-localhost:3000/
-```
 
 ## Basic structure
 

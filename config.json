@@ -2,7 +2,7 @@
 	"DBName" : "ambition",
 	"DBUser" : "ambition",
 	"DBPassword" : "ambition",
-	"DBLocal" : true,
+	"DBLocal" : false,
 	"DBHost" : "localhost",
 	"DBPort" : 5432,
 	"DBSSL" : "disable",

@@ -21,7 +21,7 @@ func Run() {
 	http.ListenAndServe(fmt.Sprintf(":%d", port), router)
 }
 
-func Init() {
+func init() {
 	config := ReadConfiguration("./config.json")
 
 	var dbString string
@@ -30,7 +30,7 @@ func Init() {
 		dbString = fmt.Sprintf("user=%s password=%s dbname=%s sslmode=%s",
 			config.DBUser, config.DBPassword, config.DBName, config.DBSSL)
 	} else {
-		dbString = fmt.Sprintf("postgres://%s:%s@localhost:%d/%s?sslmode=%s",
+		dbString = fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=%s",
 			config.DBUser, config.DBPassword, config.DBHost, config.DBPort, config.DBName, config.DBSSL)
 	}
 

@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	ambition.Init()
+	//	ambition.Init()
 	if len(os.Args) > 1 {
 		if err := ambition.CallCommand(os.Args[1]); err != nil {
 			log.Fatal(err)
