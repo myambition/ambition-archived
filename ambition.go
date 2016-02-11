@@ -6,6 +6,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	_ "github.com/lib/pq"
 	"net/http"
+	"os"
 )
 
 var port int
@@ -22,7 +23,9 @@ func Run() {
 }
 
 func init() {
-	config := ReadConfiguration("./config.json")
+	homePath := os.Getenv("HOME")
+
+	config := ReadConfiguration(homePath + "/.config/ambition/config.json")
 
 	var dbString string
 
