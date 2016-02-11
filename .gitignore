@@ -26,8 +26,5 @@ _testmain.go
 # vim
 *.swp
 
-# binary
-ambition
-
 #
 __render/

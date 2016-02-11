@@ -12,7 +12,7 @@ import (
 // which runs the latest postgres image linking port 5432 and setting the params
 // This function should eventually be populated by some kind of config
 // I am thinking a json file I open and univerally parse
-func initDockerPostgres() {
+func dockerDB() {
 	out, err := exec.Command("docker", "run", "-e", "POSTGRES_PASSWORD=ambition", "-e", "POSTGRES_USER=ambition", "-p", "5432:5432", "-d", "postgres").Output()
 	fmt.Printf("%s", err)
 	fmt.Printf("%s", out)
@@ -54,8 +54,8 @@ func seedTables() {
 
 func CallCommand(command string) error {
 	switch command {
-	case "initDockerPostgres":
-		initDockerPostgres()
+	case "dockerDB":
+		dockerDB()
 	case "seed":
 		seedTables()
 	case "create":
